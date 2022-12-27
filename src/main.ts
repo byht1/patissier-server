@@ -7,8 +7,6 @@ const start = async () => {
     const PORT = process.env.PORT || 5000;
     const app = await NestFactory.create(AppModule, { cors: true });
 
-    //tesr
-
     const config = new DocumentBuilder()
       .setTitle('Bakery')
       .setDescription('Documentation REST API')
