@@ -9,7 +9,7 @@ const start = async () => {
 
     const config = new DocumentBuilder()
       .setTitle('Bakery')
-      .setDescription('Документація REST API')
+      .setDescription('Documentation REST API')
       .setVersion('0.0.1')
       .addServer('http://localhost:5000')
       .build();
