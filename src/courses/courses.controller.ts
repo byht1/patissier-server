@@ -1,9 +1,9 @@
 import { Controller, Post, Get, Query, Body } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Cours } from 'src/db-schemas/courses.schema';
+import { Course } from 'src/db-schemas/courses.schema';
 import { CoursesService } from './courses.service';
-import { CreateCoursDto } from './dto/create-cours.dto';
-import { SearchCoursDto } from './dto/search-courses.dto';
+import { CreateCourseDto } from './dto/create-course.dto';
+import { SearchCourseDto } from './dto/search-courses.dto';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -11,8 +11,8 @@ export class CoursesController {
   constructor(private coursesService: CoursesService) {}
 
   @ApiOperation({ summary: 'Get array all Courses' })
-  @ApiResponse({ status: 200, type: [Cours] })
-  @Get()
+  @ApiResponse({ status: 200, type: [Course] })
+  @Get('/all')
   getAllCourses() {
     return this.coursesService.getAllCourses();
   }
@@ -21,15 +21,15 @@ export class CoursesController {
     description: 'online values that need to be considered for filter',
   })
   @ApiOperation({ summary: 'Get array Courses online or offline' })
-  @ApiResponse({ status: 200, type: [Cours] })
+  @ApiResponse({ status: 200, type: [Course] })
   @Get()
-  getCourses(@Query('online') online: SearchCoursDto) {
+  getCourses(@Query('online') online: SearchCourseDto) {
     return this.coursesService.getCourses(online);
   }
-  @ApiOperation({ summary: 'Create Cours' })
-  @ApiResponse({ status: 200, type: [Cours] })
+  @ApiOperation({ summary: 'Create Course' })
+  @ApiResponse({ status: 200, type: [Course] })
   @Post()
-  CreateCours(@Body() dto: CreateCoursDto) {
-    return this.coursesService.createCours(dto);
+  CreateCourse(@Body() dto: CreateCourseDto) {
+    return this.coursesService.createCourse(dto);
   }
 }

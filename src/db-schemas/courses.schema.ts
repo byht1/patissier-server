@@ -2,10 +2,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
-export type CoursDocument = Cours & Document;
+export type CourseDocument = Course & Document;
 
 @Schema({ versionKey: false, timestamps: true })
-export class Cours {
+export class Course {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
   _id: mongoose.Schema.Types.ObjectId;
 
@@ -52,4 +52,4 @@ export class Cours {
   // price: number;
 }
 
-export const CoursSchema = SchemaFactory.createForClass(Cours);
+export const CourseSchema = SchemaFactory.createForClass(Course);

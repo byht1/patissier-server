@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean } from 'class-validator';
 
-export class CreateCoursDto {
+export class CreateCourseDto {
   @ApiProperty({
     example: 'Фруки',
     description: 'Category by courses',
