@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CoursesModule } from './courses/courses.module';
+import { CatalogModule } from './catalog/catalog.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { CoursesModule } from './courses/courses.module';
       useUnifiedTopology: true,
     }),
     CoursesModule,
+    CatalogModule,
   ],
 })
 export class AppModule {}
