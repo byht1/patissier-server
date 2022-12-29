@@ -17,12 +17,21 @@ export class CoursesService {
       .sort('startDate');
     return courses;
   }
-  async getCourses(online: SearchCourseDto) {
-    const courses = await this.courseModule.find({
-      isOnline: online,
-    });
+  async getCoursesBy(dto: SearchCourseDto) {
+    const find =
+      dto.category === 'all'
+        ? {
+            isOnline: dto.online,
+          }
+        : {
+            isOnline: dto.online,
+            category: { $regex: dto.category, $options: 'i' },
+          };
+
+    const courses = await this.courseModule.find(find);
     return courses;
   }
+
   async createCourse(dto: CreateCourseDto) {
     const { startDate } = dto;
     const course = await this.courseModule.create({

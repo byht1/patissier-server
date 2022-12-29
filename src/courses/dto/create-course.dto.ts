@@ -3,14 +3,14 @@ import { IsString, IsBoolean } from 'class-validator';
 
 export class CreateCourseDto {
   @ApiProperty({
-    example: 'Фруки',
+    example: 'Торти',
     description: 'Category by course',
   })
   @IsString({ message: 'Should be text' })
   readonly category: string;
 
   @ApiProperty({
-    example: '12/15/2022',
+    example: '02/12/2023',
     description: 'Start date a course',
   })
   @IsString({ message: 'Should be text' })
