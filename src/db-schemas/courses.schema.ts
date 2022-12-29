@@ -39,11 +39,11 @@ export class Course {
   // @Prop()
   // timeframe: string;
 
-  // @ApiProperty({
-  //   example: '56358365837547',
-  // })
-  // @Prop()
-  // startDate: number;
+  @ApiProperty({
+    example: 'mm/dd/yyyy',
+  })
+  @Prop()
+  startDate: number;
 
   // @ApiProperty({
   //   example: '5000',

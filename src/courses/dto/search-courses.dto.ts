@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-// import { IsBoolean, IsString } from 'class-validator/types/decorator/decorators';
 
 export class SearchCourseDto {
   @ApiProperty({
