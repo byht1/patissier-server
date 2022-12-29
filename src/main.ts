@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.service';
+import { AppModule } from './app.module';
 
 const start = async () => {
   try {
@@ -10,14 +10,14 @@ const start = async () => {
     const config = new DocumentBuilder()
       .setTitle('Bakery')
       .setDescription('Documentation REST API')
-      .setVersion('0.0.1')
-      .addServer('http://localhost:5000')
+      .setVersion('1.0.11')
+      .addServer(`http://localhost:${PORT}`)
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/docs', app, document);
 
     await app.listen(PORT, () =>
-      console.log(`server start http://localhost:${PORT}`),
+      console.log(`server start http://localhost:${PORT}`)
     );
   } catch (error) {
     console.error(error);
