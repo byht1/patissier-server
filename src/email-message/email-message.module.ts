@@ -1,13 +1,15 @@
 import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import { ConfigModule } from '@nestjs/config';
 
 import { EmailMessageService } from './email-message.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({ envFilePath: '.env' }),
     MailerModule.forRoot({
       transport: {
+        service: 'gmail',
         host: 'smtp.gmail.com',
         port: 587,
         ignoreTLS: true,
@@ -17,19 +19,9 @@ import { EmailMessageService } from './email-message.service';
           pass: process.env.EMAIL_PASSWORD,
         },
       },
-      defaults: {
-        from: '"No Reply" <no-reply@localhost>',
-      },
-      preview: false,
-      template: {
-        dir: process.cwd() + '/template/',
-        adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
-        options: {
-          strict: true,
-        },
-      },
     }),
   ],
   providers: [EmailMessageService],
+  exports: [EmailMessageService],
 })
 export class EmailMessageModule {}

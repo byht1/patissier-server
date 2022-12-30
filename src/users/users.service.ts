@@ -17,10 +17,8 @@ export class UsersService {
     private emailMessage: EmailMessageService,
   ) {}
 
-  async signUp(user: NewUserDto): Promise<TNewUser> {
+  async signUp(user: NewUserDto): Promise<TNewUser | any> {
     const { email, password, username } = user;
-
-    const activeLInk = this.emailMessage.newUserMessage(email);
 
     const isUser = await this.usersModel.findOne({
       $or: [{ username: username }, { email: email }],
@@ -34,21 +32,20 @@ export class UsersService {
       throw new HttpException(`${mes} in use`, HttpStatus.CONFLICT);
     }
 
+    const activeLInk = await this.emailMessage.newUserMessage(email);
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = await this.usersModel.create({
       ...user,
       password: hashPassword,
-      // activeLInk: activeLInk,
+      verificationToken: activeLInk,
     });
-    console.log('🚀  UsersService  newUser', newUser);
 
-    const token = await this.generatorToken({ id: newUser._id });
+    const newToken = await this.generatorToken({ id: newUser._id });
 
-    const res: TNewUser = newUser;
-    res.token = token;
+    const res: { [key: string]: any } = { ...newUser };
 
-    return res;
+    return { ...res._doc, token: newToken };
   }
 
   private async generatorToken(payload): Promise<string> {
