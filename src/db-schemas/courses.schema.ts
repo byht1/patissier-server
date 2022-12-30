@@ -10,45 +10,45 @@ export class Course {
   _id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'Торти' })
-  @Prop()
+  @Prop({ type: String, required: true })
   category: string;
 
   @ApiProperty({ example: 'image url' })
-  @Prop()
+  @Prop({ type: String, required: true })
   url: string;
 
   @ApiProperty({ example: 'true' })
-  @Prop()
+  @Prop({ type: Boolean, required: true })
   isOnline: boolean;
 
   // @ApiProperty({
   //   example: 'На курсі ви навчитеся працювати з різними видами тіста',
   // })
-  // @Prop()
+  // @Prop({ type: String, required: true })
   // comments: string;
 
   // @ApiProperty({
   //   example: '12 осіб',
   // })
-  // @Prop()
+  // @Prop({ type: String, required: true })
   // group : string;
 
   // @ApiProperty({
   //   example: '5 днів',
   // })
-  // @Prop()
+  // @Prop({ type: String, required: true })
   // timeframe: string;
 
   @ApiProperty({
     example: 'mm/dd/yyyy',
   })
-  @Prop()
+  @Prop({ type: Number, required: true })
   startDate: number;
 
   // @ApiProperty({
   //   example: '5000',
   // })
-  // @Prop()
+  // @Prop({ type: Number, required: true })
   // price: number;
 }
 

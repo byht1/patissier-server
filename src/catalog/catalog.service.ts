@@ -12,15 +12,22 @@ export class CatalogService {
   ) {}
 
   async getCatalogBy(dto: SearchCatalogDto) {
+    console.log(dto);
+
     const find =
       dto.category === 'all'
         ? {}
         : {
             category: { $regex: dto.category, $options: 'i' },
           };
-
-    const catalog = await this.catalogModule.find(find);
-    return catalog;
+    const skip = ((Number(dto.page) || 1) - 1) * Number(dto.limit);
+    const catalog = await this.catalogModule
+      .find(find)
+      .sort({ isAvailable: -1 })
+      .skip(skip)
+      .limit(Number(dto.limit) || 9);
+    const total = await this.catalogModule.find(find).count();
+    return { catalog, page: Number(dto.page) || 1, total };
   }
 
   async createCatalog(dto: CreateCatalogDto) {

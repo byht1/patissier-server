@@ -10,34 +10,40 @@ export class Catalog {
   _id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'Торти' })
-  @Prop()
+  @Prop({ type: String, required: true })
   category: string;
 
   @ApiProperty({ example: 'image url' })
-  @Prop()
+  @Prop({ type: String, required: true })
   url: string;
 
   @ApiProperty({ example: 'Булка “Равлик”' })
-  @Prop()
+  @Prop({ type: String, required: true })
   title: string;
 
   @ApiProperty({
     example: 'Ніжний заварний крем та зрусткк печиво...',
   })
-  @Prop()
+  @Prop({ type: String, required: true })
   description: string;
 
   @ApiProperty({
-    example: '21,00 грн/шт',
+    example: 21.5,
   })
-  @Prop()
-  price: string;
+  @Prop({ type: Number, required: true })
+  price: number;
 
   @ApiProperty({
     example: 'Склад',
   })
-  @Prop()
+  @Prop({ type: String, required: true })
   ingredients: string;
+
+  @ApiProperty({
+    example: 'true',
+  })
+  @Prop({ type: Boolean, default: true })
+  isAvailable: boolean;
 }
 
 export const CatalogSchema = SchemaFactory.createForClass(Catalog);
