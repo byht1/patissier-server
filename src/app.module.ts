@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CoursesModule } from './courses/courses.module';
 import { UsersModule } from './users/users.module';
-// import { EmailMessageModule } from './email-message/email-message.module';
+import { CatalogModule } from './catalog/catalog.module';
+import { ReviewsModule } from './reviews/reviews.module';
 
 @Module({
   imports: [
@@ -14,6 +15,8 @@ import { UsersModule } from './users/users.module';
     }),
     CoursesModule,
     UsersModule,
+    CatalogModule,
+    ReviewsModule,
   ],
 })
 export class AppModule {}

@@ -23,8 +23,8 @@ export class CoursesController {
   @ApiOperation({ summary: 'Get array Courses online or offline' })
   @ApiResponse({ status: 200, type: [Course] })
   @Get()
-  getCourses(@Query('online') online: SearchCourseDto) {
-    return this.coursesService.getCourses(online);
+  getCourses(@Query() dto: SearchCourseDto) {
+    return this.coursesService.getCoursesBy(dto);
   }
   @ApiOperation({ summary: 'Create Course' })
   @ApiResponse({ status: 200, type: [Course] })
