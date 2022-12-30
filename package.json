@@ -21,6 +21,7 @@
     "start:prod": "node dist/main.js"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.8.1",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.2.0",
     "@nestjs/core": "^9.0.0",
@@ -33,6 +34,7 @@
     "class-validator": "^0.13.2",
     "firebase": "^9.12.1",
     "mongoose": "^6.6.5",
+    "nodemailer": "^6.8.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
