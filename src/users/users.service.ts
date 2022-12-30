@@ -1,3 +1,4 @@
+import { TAvatar } from './type/avatar';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
@@ -34,11 +35,14 @@ export class UsersService {
 
     const activeLInk = await this.emailMessage.newUserMessage(email);
     const hashPassword = await bcrypt.hash(password, 10);
+    const avatar = this.generatorAvatars(username);
 
     const newUser = await this.usersModel.create({
       ...user,
       password: hashPassword,
       verificationToken: activeLInk,
+      avatar_svg: avatar.svg,
+      avatar_png: avatar.png,
     });
 
     const newToken = await this.generatorToken({ id: newUser._id });
@@ -46,6 +50,13 @@ export class UsersService {
     const res: { [key: string]: any } = { ...newUser };
 
     return { ...res._doc, token: newToken };
+  }
+
+  private generatorAvatars(name: string): TAvatar {
+    return {
+      png: `https://api.multiavatar.com/${name}.png`,
+      svg: `https://api.multiavatar.com/${name}.svg`,
+    };
   }
 
   private async generatorToken(payload): Promise<string> {

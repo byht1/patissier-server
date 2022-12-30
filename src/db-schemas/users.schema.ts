@@ -1,6 +1,8 @@
+import { Course } from 'src/db-schemas/courses.schema';
+import { Review } from 'src/db-schemas/reviews.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
-import { ObjectId } from 'mongoose';
+import mongoose, { ObjectId } from 'mongoose';
 // import mongoose from 'mongoose';
 
 export type UsersDocument = Users & Document;
@@ -44,26 +46,38 @@ export class Users {
   @Prop({ type: Boolean, default: false })
   isActive: boolean;
 
-  //   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
-  //   @Prop({
-  //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Reviews' }],
-  //     default: [],
-  //   })
-  //   reviews: Reviews[];
+  @ApiProperty({
+    example: 'https://api.multiavatar.com/1.svg',
+  })
+  @Prop({ type: String, default: 'https://api.multiavatar.com/1.svg' })
+  avatar_svg: string;
 
-  //   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
-  //   @Prop({
-  //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Courses' }],
-  //     default: [],
-  //   })
-  //   completedCourses: Courses[];
+  @ApiProperty({
+    example: 'https://api.multiavatar.com/1.png',
+  })
+  @Prop({ type: String, default: 'https://api.multiavatar.com/1.png' })
+  avatar_png: string;
 
-  //   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
-  //   @Prop({
-  //     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Courses' }],
-  //     default: [],
-  //   })
-  //   reviews: Courses[];
+  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'reviews' }],
+    default: [],
+  })
+  reviews: Review[];
+
+  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'completedCourses' }],
+    default: [],
+  })
+  completedCourses: Course[];
+
+  // @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  // @Prop({
+  //   type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Courses' }],
+  //   default: [],
+  // })
+  // reviews: Courses[];
 }
 
 export const UsersSchema = SchemaFactory.createForClass(Users);
