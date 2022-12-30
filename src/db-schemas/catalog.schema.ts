@@ -28,10 +28,16 @@ export class Catalog {
   description: string;
 
   @ApiProperty({
-    example: '21,00 грн/шт',
+    example: '21,00',
+  })
+  @Prop({ type: Number, required: true })
+  price: number;
+
+  @ApiProperty({
+    example: 'грн/шт',
   })
   @Prop({ type: String, required: true })
-  price: string;
+  priceBy: string;
 
   @ApiProperty({
     example: 'Склад',

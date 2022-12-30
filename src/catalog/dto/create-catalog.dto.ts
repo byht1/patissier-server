@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsBoolean } from 'class-validator';
+import { IsString, IsBoolean, IsNumber } from 'class-validator';
 
 export class CreateCatalogDto {
   @ApiProperty({
@@ -17,11 +17,20 @@ export class CreateCatalogDto {
   readonly title: string;
 
   @ApiProperty({
-    example: '21,00 грн/шт',
+    example: 21.5,
     description: 'price',
   })
+  @IsNumber()
+  readonly price: number;
+
+  @ApiProperty({
+    example: 'грн/шт',
+    required: false,
+    default: 'грн/шт',
+    description: 'price by',
+  })
   @IsString({ message: 'Should be text' })
-  readonly price: string;
+  readonly priceBy: string;
 
   @ApiProperty({
     example: 'Ніжний заварний крем та зрусткк печиво...',
