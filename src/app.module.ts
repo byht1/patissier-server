@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { CoursesModule } from './courses/courses.module';
+import { UsersModule } from './users/users.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ReviewsModule } from './reviews/reviews.module';
 
@@ -13,6 +14,7 @@ import { ReviewsModule } from './reviews/reviews.module';
       useUnifiedTopology: true,
     }),
     CoursesModule,
+    UsersModule,
     CatalogModule,
     ReviewsModule,
   ],
