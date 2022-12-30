@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsString, IsBoolean } from 'class-validator';
 
 export class CreateCatalogDto {
   @ApiProperty({
@@ -36,4 +36,11 @@ export class CreateCatalogDto {
   })
   @IsString({ message: 'Should be text' })
   readonly ingredients: string;
+
+  @ApiProperty({
+    example: 'true',
+    description: 'Is available or not available',
+  })
+  @IsBoolean({ message: 'Should be boolean' })
+  readonly isAvailable: boolean;
 }

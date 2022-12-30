@@ -17,7 +17,7 @@ const start = async () => {
     SwaggerModule.setup('/docs', app, document);
 
     await app.listen(PORT, () =>
-      console.log(`server start http://localhost:${PORT}`)
+      console.log(`server start http://localhost:${PORT}/docs`),
     );
   } catch (error) {
     console.error(error);
