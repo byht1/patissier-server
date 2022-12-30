@@ -7,13 +7,15 @@ export class EmailMessageService {
   constructor(private readonly mailerService: MailerService) {}
 
   public async newUserMessage(email: string): Promise<string> {
+    const dev = process.env.DEV
+      ? `http://localhost:${process.env.PORT}`
+      : 'https://patissier-server.herokuapp.com';
     const link = uuidv4();
     const title = 'Підтвердження пошти на сайті Bakery';
     const html = `<div>
     <h1>Підтвердження пошти на сайті Bakery</h1>
-    <span>Для підтвердження перейдіть  <a href="https://filmoteka-server.herokuapp.com/user/activate/${link}">за посиланням</a></span>
+    <span>Для підтвердження перейдіть  <a href="${dev}/user/activate/${link}">за посиланням</a></span>
     </div>`;
-
     try {
       await this.example(html, title, email);
 

@@ -17,7 +17,7 @@ export class UsersService {
     private emailMessage: EmailMessageService,
   ) {}
 
-  async signUp(user: NewUserDto): Promise<TNewUser | any> {
+  async signUp(user: NewUserDto): Promise<TNewUser> {
     const { email, password, username } = user;
 
     const isUser = await this.usersModel.findOne({
