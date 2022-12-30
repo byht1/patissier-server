@@ -24,15 +24,6 @@ export class CreateCatalogDto {
   readonly price: number;
 
   @ApiProperty({
-    example: 'грн/шт',
-    required: false,
-    default: 'грн/шт',
-    description: 'price by',
-  })
-  @IsString({ message: 'Should be text' })
-  readonly priceBy: string;
-
-  @ApiProperty({
     example: 'Ніжний заварний крем та зрусткк печиво...',
     description: 'description',
   })
