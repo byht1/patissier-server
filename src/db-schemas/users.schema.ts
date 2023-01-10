@@ -44,7 +44,7 @@ export class Users {
     example: false,
   })
   @Prop({ type: Boolean, default: false })
-  isActive: boolean;
+  verify: boolean;
 
   @ApiProperty({
     example: 'https://api.multiavatar.com/1.svg',
