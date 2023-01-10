@@ -17,9 +17,9 @@ export class EmailMessageService {
     <span>Для підтвердження перейдіть  <a href="${dev}/user/activate/${link}">за посиланням</a></span>
     </div>`;
     try {
-      if (!dev) {
-        await this.example(html, title, email);
-      }
+      // if (!dev) {
+      await this.example(html, title, email);
+      // }
 
       return link;
     } catch (error) {

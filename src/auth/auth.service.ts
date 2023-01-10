@@ -74,7 +74,8 @@ export class AuthService {
       throw new HttpException('Incorrect password', HttpStatus.UNAUTHORIZED);
     }
 
-    const token = this.generatorToken(isUser._id);
+    const token = await this.generatorToken(isUser._id);
+    console.log('🚀  AuthService  token', token);
 
     const res: { [key: string]: any } = { ...isUser };
 

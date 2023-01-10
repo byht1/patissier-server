@@ -24,8 +24,9 @@ import { IRequestUser } from './type';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // Google log-in
-  // Facebook log-in
+  // Google log-in GET доробить
+  // Facebook log-in GET доробить
+  // зміна пароля PUT доробить
 
   @ApiResponse({ status: 201, type: Users })
   @ApiResponse({ status: 400, description: 'Invalid data' })
@@ -68,11 +69,12 @@ export class AuthController {
     return this.authService.logOut(req.user, req.currentToken);
   }
 
-  @Get('active/:verificationToken')
+  @Get('/active/:verificationToken')
   @Redirect('', 302)
   verification(@Param('verificationToken') verificationToken: string) {
     const status = this.authService.verification(verificationToken);
 
+    // переглянути
     if (status) return { url: '' };
 
     return { url: '' };
@@ -84,7 +86,7 @@ export class AuthController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @HttpCode(204)
   @UsePipes(ValidateNewUserPipe)
-  @Post('active/refresh-link')
+  @Post('/active/refresh-link')
   refreshActiveLink(@Body() body: RefreshActiveLinkDto) {
     return this.authService.refreshActiveLink(body.email);
   }

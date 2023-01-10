@@ -8,7 +8,7 @@ export const passwordSchema = Object.freeze({
   number: /(?=.*[0-9])/,
   min: /[0-9a-zA-Z!@#$%^&*_]{7,}/,
   original:
-    /(?=.*[0-9])(?=.*[!@#$%^&*_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*_]{7,}/g,
+    /(?=.*[0-9])(?=.*[!@#$%^&*_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*_]{7,}/,
 });
 
 export class NewUserDto {
