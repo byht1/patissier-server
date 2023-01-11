@@ -14,8 +14,8 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
-  Put,
   Redirect,
   Req,
   UseGuards,
@@ -34,7 +34,6 @@ export class AuthController {
 
   // Google log-in GET доробить
   // Facebook log-in GET доробить
-  // зміна пароля PUT доробить
 
   @ApiResponse({ status: 201, type: Users })
   @ApiResponse({ status: 400, description: 'Invalid data' })
@@ -115,7 +114,7 @@ export class AuthController {
   @HttpCode(204)
   @UseGuards(JwtAuthGuard)
   @UsePipes(ValidatePipe)
-  @Put('/new-password')
+  @Patch('/new-password')
   newPassword(@Body() body: NewPasswordDto, @Req() req: IRequestUser) {
     return this.authService.newPassword(body, req.user);
   }
@@ -125,7 +124,7 @@ export class AuthController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @HttpCode(204)
-  @Get('/forgotten-password')
+  @Patch('/forgotten-password')
   forgottenPassword(@Body() emailDto: EmailDto) {
     return this.authService.forgottenPassword(emailDto.email);
   }
@@ -150,7 +149,7 @@ export class AuthController {
     return { url: `.../${link}` };
   }
 
-  @Put('/forgotten-password/new/:link')
+  @Patch('/forgotten-password/new/:link')
   forgottenPasswordNew(
     @Body() body: ForgottenPasswordNewDto,
     @Param('link') link: string,

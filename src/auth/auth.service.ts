@@ -167,6 +167,8 @@ export class AuthService {
 
     await this.usersModel.findByIdAndUpdate(isUser._id, {
       password: hashPassword,
+      token: [],
+      forgottenPasswordToken: null,
     });
 
     return;
