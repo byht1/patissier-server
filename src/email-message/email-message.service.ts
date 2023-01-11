@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export class EmailMessageService {
   constructor(private readonly mailerService: MailerService) {}
 
-  public async newUserMessage(email: string): Promise<string> {
+  async newUserMessage(email: string): Promise<string> {
     const dev = process.env.DEV
       ? `http://localhost:${process.env.PORT}`
       : 'https://patissier-server.herokuapp.com';
@@ -14,17 +14,32 @@ export class EmailMessageService {
     const title = 'Підтвердження пошти на сайті Bakery';
     const html = `<div>
     <h1>Підтвердження пошти на сайті Bakery</h1>
-    <span>Для підтвердження перейдіть  <a href="${dev}/user/activate/${link}">за посиланням</a></span>
+    <span>Для підтвердження перейдіть  <a href="${dev}/auth/activate/${link}">за посиланням</a></span>
     </div>`;
-    try {
-      // if (!dev) {
-      await this.example(html, title, email);
-      // }
+    // if (!dev) {
+    await this.example(html, title, email);
+    // }
 
-      return link;
-    } catch (error) {
-      throw error;
-    }
+    return link;
+  }
+
+  async forgottenPassword(email): Promise<string> {
+    const dev = process.env.DEV
+      ? `http://localhost:${process.env.PORT}`
+      : 'https://patissier-server.herokuapp.com';
+    const link = uuidv4();
+    const title = 'Зміна пароля на сайті Bakery';
+    const html = `<div>
+    <h1>Підтвердження пошти на сайті Bakery</h1>
+    <span>Для підтвердження перейдіть  <a href="${dev}/auth/forgotten-password/${link}">за посиланням</a></span>
+    </br>
+    </br>
+    <span>Якщо це були не ви то перейдіть <a href="${dev}/auth/forgotten-password/error/${link}">за посиланням</a></span>
+    </div>`;
+
+    await this.example(html, title, email);
+
+    return link;
   }
 
   private async example(

@@ -8,7 +8,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Users, UsersDocument } from 'src/db-schemas/users.schema';
 import { TNewUser } from './type';
 import { EmailMessageService } from 'src/email-message/email-message.service';
-import { LogInDto, NewUserDto } from './dto';
+import { LogInDto, NewPasswordDto, NewUserDto } from './dto';
 import { UsersService } from 'src/users/users.service';
 
 // 401 Access allowed only for registered users. доступ тільки для зареєстрованих
@@ -36,7 +36,7 @@ export class AuthService {
     }
 
     const activeLInk = await this.emailMessage.newUserMessage(email);
-    const hashPassword = await bcrypt.hash(password, 10);
+    const hashPassword = await this.bcryptPassword(password);
     const avatar = this.generatorAvatars(username);
 
     const newUser = await this.usersModel.create({
@@ -56,26 +56,21 @@ export class AuthService {
 
   async logIn(user: LogInDto): Promise<TNewUser> {
     const { login, password } = user;
-    let isUser;
+    const isUser = await this.searchUser(login);
 
-    isUser = await this.usersService.userByEmail(login);
+    // isUser = await this.usersService.userByEmail(login);
 
-    if (!isUser) {
-      isUser = await this.usersService.userByUsername(login);
-    }
+    // if (!isUser) {
+    //   isUser = await this.usersService.userByUsername(login);
+    // }
 
-    if (!isUser) {
-      throw new HttpException('User does not exist', HttpStatus.UNAUTHORIZED);
-    }
+    // if (!isUser) {
+    //   throw new HttpException('User does not exist', HttpStatus.UNAUTHORIZED);
+    // }
 
-    const passwordEquals = await bcrypt.compare(password, isUser.password);
-
-    if (!passwordEquals) {
-      throw new HttpException('Incorrect password', HttpStatus.UNAUTHORIZED);
-    }
+    await this.passwordIsValid(password, isUser.password);
 
     const token = await this.generatorToken(isUser._id);
-    console.log('🚀  AuthService  token', token);
 
     const res: { [key: string]: any } = { ...isUser };
 
@@ -118,6 +113,105 @@ export class AuthService {
       {
         verificationToken: activeLInk,
       };
+  }
+
+  async newPassword(body: NewPasswordDto, user: UsersDocument): Promise<void> {
+    const { password: oldPassword, newPassword } = body;
+
+    await this.passwordIsValid(oldPassword, user.password);
+
+    const hashPassword = await this.bcryptPassword(newPassword);
+
+    await this.usersModel.findByIdAndUpdate(user._id, {
+      password: hashPassword,
+    });
+
+    return;
+  }
+
+  async forgottenPassword(email: string): Promise<void> {
+    const isUser = await this.searchUser(email);
+
+    const link = await this.emailMessage.forgottenPassword(email);
+
+    await this.usersModel.findByIdAndUpdate(isUser._id, {
+      forgottenPasswordToken: link,
+    });
+
+    return;
+  }
+
+  async forgottenPasswordRedirect(linkId: string): Promise<void> {
+    await this.forgottenPasswordUserSearch(linkId);
+
+    return;
+  }
+
+  async forgottenPasswordError(linkId: string): Promise<void> {
+    const isUser = await this.forgottenPasswordUserSearch(linkId);
+
+    await this.usersModel.findByIdAndUpdate(isUser._id, {
+      forgottenPasswordToken: null,
+    });
+
+    return;
+  }
+
+  async forgottenPasswordNew(
+    newPassword: string,
+    linkId: string,
+  ): Promise<void> {
+    const isUser = await this.forgottenPasswordUserSearch(linkId);
+
+    const hashPassword = await this.bcryptPassword(newPassword);
+
+    await this.usersModel.findByIdAndUpdate(isUser._id, {
+      password: hashPassword,
+    });
+
+    return;
+  }
+
+  private async forgottenPasswordUserSearch(
+    forgottenPasswordToken: string,
+  ): Promise<UsersDocument> {
+    const isUser = await this.usersModel.findOne({
+      forgottenPasswordToken,
+    });
+
+    if (!isUser) {
+      throw new HttpException('Not Found', HttpStatus.NOT_FOUND);
+    }
+
+    return isUser;
+  }
+
+  private async searchUser(login: string): Promise<UsersDocument> {
+    let isUser;
+
+    isUser = await this.usersService.userByEmail(login);
+
+    if (!isUser) {
+      isUser = await this.usersService.userByUsername(login);
+    }
+
+    if (!isUser) {
+      throw new HttpException('User does not exist', HttpStatus.UNAUTHORIZED);
+    }
+
+    return isUser;
+  }
+
+  private async bcryptPassword(password: string): Promise<string> {
+    return await bcrypt.hash(password, 10);
+  }
+
+  private async passwordIsValid(password: string, userPassword: string) {
+    const passwordEquals = await bcrypt.compare(password, userPassword);
+
+    if (!passwordEquals) {
+      throw new HttpException('Incorrect password', HttpStatus.UNAUTHORIZED);
+    }
   }
 
   private generatorAvatars(name: string): TAvatar {

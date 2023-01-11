@@ -5,7 +5,7 @@ import { validate } from 'class-validator';
 import { ValidationException } from 'src/exceptions/validation.exception';
 
 @Injectable()
-export class ValidateNewUserPipe implements PipeTransform {
+export class ValidatePipe implements PipeTransform {
   async transform(value: any, metadata: ArgumentMetadata) {
     const obj = plainToClass(metadata.metatype, value);
     const errors = await validate(obj);

@@ -38,6 +38,12 @@ export class Users {
     example: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
   })
   @Prop({ type: String, default: null })
+  forgottenPasswordToken: string;
+
+  @ApiProperty({
+    example: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+  })
+  @Prop({ type: String, default: null })
   verificationToken: string;
 
   @ApiProperty({
@@ -71,6 +77,12 @@ export class Users {
     default: [],
   })
   completedCourses: Course[];
+
+  @ApiProperty({
+    example: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
+  })
+  @Prop({ type: String, default: null })
+  forgottenPassword: string;
 
   // @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   // @Prop({
