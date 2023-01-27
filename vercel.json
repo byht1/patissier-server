@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "env": {
     "DB_HOST": "@mongo_uri",
     "SECRET_KEY": "@secret_key",
