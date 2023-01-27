@@ -1,16 +1,16 @@
 {
   "version": 2,
+  "name": "nestjs-now",
   "builds": [
     {
-      "src": "src/main.ts",
-      "use": "@vercel/node"
+      "src": "dist/main.js",
+      "use": "@now/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/main.ts",
-      "methods": ["GET", "POST", "PUT", "PATCH", "DELETE"]
+      "dest": "dist/main.js"
     }
   ]
 }
