@@ -16,10 +16,6 @@ const start = async () => {
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('/docs', app, document);
 
-    app.use('/', async (req, res) => {
-      res.json({ name: 'Hellow' });
-    });
-
     await app.listen(PORT, () =>
       console.log(`server start http://localhost:${PORT}/docs`),
     );
@@ -27,7 +23,5 @@ const start = async () => {
     console.error(error);
   }
 };
-
-// gs://music-db-11801.appspot.com
 
 start();
