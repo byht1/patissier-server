@@ -18,7 +18,9 @@ import {
   Post,
   Redirect,
   Req,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 
@@ -26,6 +28,7 @@ import { Users } from 'src/db-schemas/users.schema';
 import { ValidatePipe } from './pipe/validate.pipe';
 import { JwtAuthGuard } from './guard/jwt-auth.guard';
 import { IRequestUser } from './type';
+import { FileFieldsInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Auth')
 @Controller('auth')
