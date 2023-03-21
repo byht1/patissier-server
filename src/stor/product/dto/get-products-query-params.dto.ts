@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumberString, IsOptional, IsString, Matches } from 'class-validator';
 import { errorMessageDto, idListReg, selectProductReg } from 'src/classValidator';
-import { Stor, storColumnName } from 'src/db-schemas/stor.schema';
+import { storColumnName } from 'src/db-schemas/stor.schema';
 import { convertorECategory, convertorETypeSortProducts, ECategory, ETypeSortProducts } from '../type';
 
 export class GetProductsQueryParams {
