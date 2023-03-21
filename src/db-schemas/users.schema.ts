@@ -3,6 +3,7 @@ import { Review } from 'src/db-schemas/reviews.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose, { ObjectId } from 'mongoose';
+import { Orders } from './orders.schema';
 // import mongoose from 'mongoose';
 
 export type UsersDocument = Users & Document;
@@ -28,8 +29,7 @@ export class Users {
   email: string;
 
   @ApiProperty({
-    example:
-      'eyJhbGciOiJIUzI1NiI.eyJpZCI6IjYLCJpYXQiOjE2NjU2NTM2NgsImV4cCI6MTY2NTc0MDA3OH0.mZMKEw1j3N9VVZ97E',
+    example: 'eyJhbGciOiJIUzI1NiI.eyJpZCI6IjYLCJpYXQiOjE2NjU2NTM2NgsImV4cCI6MTY2NTc0MDA3OH0.mZMKEw1j3N9VVZ97E',
   })
   @Prop()
   token: string[];
@@ -66,17 +66,24 @@ export class Users {
 
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'reviews' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Review' }],
     default: [],
   })
   reviews: Review[];
 
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   @Prop({
-    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'completedCourses' }],
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
     default: [],
   })
   completedCourses: Course[];
+
+  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Orders' }],
+    default: [],
+  })
+  orders: Orders[];
 
   @ApiProperty({
     example: '11bf5b37-e0b8-42e0-8dcf-dc8c4aefc000',
