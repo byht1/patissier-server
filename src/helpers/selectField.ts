@@ -3,8 +3,8 @@ import { StorColumnName } from 'src/db-schemas/stor.schema';
 
 type TValueArray = StorColumnName[] | OrdersColumnName[];
 
-export const inputPickSelect = (value: TValueArray): Record<string, number> =>
+export const selectFieldFromDb = (value: TValueArray, number: 0 | 1 = 1): Record<string, number> =>
   [...value].reduce((acc, inputName) => {
-    acc[inputName] = 1;
+    acc[inputName] = number;
     return acc;
   }, {});

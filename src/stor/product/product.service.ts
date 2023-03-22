@@ -5,9 +5,9 @@ import { Stor, StorColumnName, StorDocument } from 'src/db-schemas/stor.schema';
 import { CreatePictureDto, CreateProductDto, GetProductsQueryParams } from './dto';
 import { EStireName, StoreFirebase } from 'src/firebase';
 import { ECategory, ETypeSortProducts } from './type';
-import { ObjectSortOrder } from 'src/type';
+import { ObjectSortOrder, TRegSearch } from 'src/type';
 import { queryRegexGenerator } from 'src/stor/product/helpers';
-import { inputPickSelect } from 'src/classValidator/helpers';
+import { selectFieldFromDb } from 'src/helpers';
 
 @Injectable()
 export class ProductService {
@@ -33,14 +33,23 @@ export class ProductService {
   }
 
   async getProducts(searchParams: GetProductsQueryParams) {
-    const { page = '1', limit = '9', sort, category, search, searchInput = 'title', id, select } = searchParams;
+    const {
+      page = '1',
+      limit = '9',
+      sort,
+      category,
+      search,
+      searchInput = 'title',
+      id,
+      pick_field,
+      omit_field,
+    } = searchParams;
 
-    const selectList = select?.split(',') as StorColumnName[];
-    const inputPick = selectList ? inputPickSelect(selectList) : {};
     const findSort = this.findSortedProducts(sort);
     const paramsQuery = queryRegexGenerator([category, search], ['category', searchInput]);
+    const select = this.selectField({ pick_field, omit_field });
 
-    const query: Record<string, any> = { ...paramsQuery };
+    const query: Record<string, TRegSearch | string[]> = { ...paramsQuery };
     if (id) {
       query['_id'] = id.split(',');
     }
@@ -50,15 +59,29 @@ export class ProductService {
       .skip((+page - 1) * +limit)
       .limit(+limit)
       .sort(findSort)
-      .select(inputPick);
+      .select(select);
+
+    if (id) {
+      const checkId = Array.isArray(query?._id) ? query?._id.length : 0;
+      const isCheckSimilarProducts =
+        checkId === 1 && (select['similar_products'] === undefined || select['similar_products'] !== 0);
+
+      if (isCheckSimilarProducts) {
+        return await this.checkProductsListForSimilar(productsList);
+      }
+    }
 
     return productsList;
   }
 
   async getProductsFindById(id: string | string[], select?: StorColumnName[]): Promise<StorDocument[]> {
     const idList = typeof id === 'string' ? id.split(',') : id;
-    const inputPick = select ? inputPickSelect(select) : {};
+    const inputPick = select ? selectFieldFromDb(select) : {};
     return await this.storModel.find({ _id: idList }).select(inputPick);
+  }
+
+  async productOrders(id: ObjectId) {
+    await this.storModel.findByIdAndUpdate(id, { $inc: { orders: 1 } });
   }
 
   async countRecordsByCategory() {
@@ -72,6 +95,46 @@ export class ProductService {
     ]);
 
     return [...categoryCounts].sort((a, b) => a._id.localeCompare(b._id));
+  }
+  private async checkProductsListForSimilar(productsList: StorDocument[]) {
+    const update = [];
+    const checkProductsListForSimilar = productsList.map(async product => {
+      const similarProducts = product.similar_products.length;
+      if (similarProducts !== 3) {
+        const notEnough = 3 - similarProducts;
+
+        for (let i = 1; i <= notEnough; i += 1) {
+          const similar = (await this.getRandomItemsByCategory(product.category, 1)) as any;
+          product.similar_products.push(similar[0]);
+        }
+      }
+      const funcUpdateSimilarProducts = this.storModel.findByIdAndUpdate(product._id, {
+        similar_products: product.similar_products,
+      });
+
+      update.push(funcUpdateSimilarProducts);
+      return product;
+    });
+
+    const productsListUpdate = await Promise.all(checkProductsListForSimilar);
+    await Promise.all(update);
+
+    return productsListUpdate;
+  }
+
+  private selectField(select: Record<string, string>): Record<string, number> {
+    const selectKey = Object.keys(select);
+    const selectValue = Object.values(select);
+
+    return selectValue.reduce((acc, x, i) => {
+      if (!x) return acc;
+
+      const value = x.split(',') as StorColumnName[];
+      const pickOrOmit = selectKey[i] === 'pick_field' ? 1 : 0;
+      acc = { ...acc, ...selectFieldFromDb(value, pickOrOmit) };
+
+      return acc;
+    }, {});
   }
 
   private findSortedProducts(sortType: string | undefined): ObjectSortOrder {
@@ -106,9 +169,9 @@ export class ProductService {
     return { [sortField]: sortOrder };
   }
 
-  private async getRandomItemsByCategory(category: ECategory): Promise<ObjectId[]> {
+  private async getRandomItemsByCategory(category: ECategory, number = 3): Promise<ObjectId[]> {
     const randomItems = await this.storModel
-      .aggregate([{ $match: { category } }, { $sample: { size: 3 } }, { $project: { _id: 1 } }])
+      .aggregate([{ $match: { category } }, { $sample: { size: number } }, { $project: { _id: 1 } }])
       .exec();
     return randomItems;
   }

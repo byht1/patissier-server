@@ -1,10 +1,12 @@
 import { SortOrder } from 'mongoose';
 
+export type TRegSearch = {
+  $regex: string;
+  $options: string;
+};
+
 export type DBSearch = {
-  [key: string]: {
-    $regex: string;
-    $options: string;
-  };
+  [key: string]: TRegSearch;
 };
 
 export type ObjectSortOrder = { [key: string]: SortOrder };

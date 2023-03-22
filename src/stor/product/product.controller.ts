@@ -36,7 +36,6 @@ export class ProductController {
   @ApiResponse({ status: 200, type: Stor })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 403, description: 'Invalid token' })
-  @ApiResponse({ status: 404, description: 'Not found' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UseInterceptors(FileFieldsInterceptor([{ name: 'picture', maxCount: 2 }]))
   @UsePipes(ValidatePipe)

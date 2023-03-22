@@ -21,6 +21,18 @@ export enum EPayment {
   ONLINE = 'На сайті',
 }
 
+class ContactTime {
+  @ApiProperty({
+    example: 'Найближчий час',
+  })
+  contactTimeString: EContactTime;
+
+  @ApiProperty({
+    example: '2023-03-22 19:00',
+  })
+  date?: string;
+}
+
 @Schema({ versionKey: false, timestamps: true })
 export class Orders {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
@@ -46,11 +58,20 @@ export class Orders {
   @Prop({ type: String, required: true })
   deliveryAddress: string;
 
-  @ApiProperty({ example: "Коли можна зв'язатися з замовником" })
+  @ApiProperty({ type: ContactTime })
   @Prop({
     type: {
-      contactTimeString: { type: String, enum: Object.values(EContactTime), required: true },
-      date: { type: String, default: null },
+      contactTime: {
+        contactTimeString: {
+          type: String,
+          enum: Object.values(EContactTime),
+          required: true,
+        },
+        date: {
+          type: String,
+          default: null,
+        },
+      },
     },
   })
   contactTime: {

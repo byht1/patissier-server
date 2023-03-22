@@ -22,7 +22,7 @@ export class OrderService {
       throw new HttpException('The product does not exist', HttpStatus.UNAUTHORIZED);
     }
 
-    const order = await this.orderModel.create({
+    const orderPromise = this.orderModel.create({
       ...createOrderDto,
       contactTime: {
         contactTimeString: contactTimeString,
@@ -32,6 +32,8 @@ export class OrderService {
       products: totalProseAndProductId.productId,
       owner: userId,
     });
+    const productUpdateOrder = productList.map(async product => this.storService.productOrders(product._id));
+    const [order] = await Promise.all([orderPromise, ...productUpdateOrder]);
 
     return order;
   }
