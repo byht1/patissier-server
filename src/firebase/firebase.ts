@@ -9,7 +9,6 @@ const {
   FIREBASE_APP_ID,
   FIREBASE_MEASUREMENT_ID,
 } = process.env;
-console.log('🚀  FIREBASE_MEASUREMENT_ID:', FIREBASE_MEASUREMENT_ID);
 
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
@@ -22,9 +21,7 @@ const firebaseConfig = {
 };
 
 export class Firebase {
-  constructor(
-    private readonly app: FirebaseApp = initializeApp(firebaseConfig),
-  ) {}
+  constructor(private readonly app: FirebaseApp = initializeApp(firebaseConfig)) {}
 
   getApp = () => {
     return this.app;
