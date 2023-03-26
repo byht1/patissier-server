@@ -12,7 +12,7 @@ import {
 } from 'class-validator';
 import { errorMessageDto, IsDateValid } from 'src/classValidator';
 import { EContactTime, EDelivery, EPayment } from 'src/db-schemas/orders.schema';
-import { dateNextWeek } from '../helpers';
+import { nextWeekDate } from '../helpers';
 import { timeReg } from '../../../classValidator/reg/time';
 
 export class CreateOrderDto {
@@ -34,7 +34,7 @@ export class CreateOrderDto {
   readonly orderComment?: string;
 
   @ApiProperty()
-  @IsEnum(EDelivery, { message: 'Non-existent delivery method' })
+  @IsEnum(EDelivery, { message: 'This delivery method does not exist' })
   readonly typeDelivery: EDelivery;
 
   @ApiProperty()
@@ -42,12 +42,12 @@ export class CreateOrderDto {
   readonly deliveryAddress: string;
 
   @ApiProperty()
-  @IsEnum(EContactTime, { message: 'Incorrect co-tact time' })
+  @IsEnum(EContactTime, { message: 'Incorrect contact time' })
   readonly contactTimeString: EContactTime;
 
   @ApiProperty()
   @IsString({ message: errorMessageDto.notString })
-  @IsDateValid({ minDate: new Date(), maxDate: dateNextWeek() })
+  @IsDateValid({ minDate: new Date(), maxDate: nextWeekDate() })
   @IsOptional()
   readonly date?: string;
 

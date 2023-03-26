@@ -8,11 +8,11 @@ import { CreateOrderDto } from './dto';
 import { OrderService } from './order.service';
 
 @ApiTags('Order')
-@Controller('stor/order')
+@Controller('store/order')
 export class OrderController {
   constructor(private orderService: OrderService) {}
 
-  @ApiOperation({ summary: 'Add a new product' })
+  @ApiOperation({ summary: 'Add a new order' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -26,8 +26,8 @@ export class OrderController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @UseGuards(JwtAuthGuard)
-  @Post('create')
-  createOrders(@Body() createOrderDto: CreateOrderDto, @Req() req: IReqUser) {
+  @Post()
+  createOrder(@Body() createOrderDto: CreateOrderDto, @Req() req: IReqUser) {
     return this.orderService.createOrder(createOrderDto, req.user._id);
   }
 }

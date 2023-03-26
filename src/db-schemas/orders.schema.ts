@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { Users } from 'src/db-schemas/users.schema';
-import { Stor } from 'src/db-schemas/stor.schema';
+import { Store } from 'src/db-schemas/store.schema';
 
 export type OrdersDocument = Orders & Document;
 
@@ -99,7 +99,7 @@ export class Orders {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Stor' }],
     required: true,
   })
-  products: Stor[];
+  products: Store[];
 }
 
 export type OrdersColumnName = keyof Orders;

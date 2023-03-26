@@ -3,10 +3,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { ECategory } from 'src/stor/product/type';
 
-export type StorDocument = Stor & Document;
+export type StorDocument = Store & Document;
 
 @Schema({ versionKey: false, timestamps: true })
-export class Stor {
+export class Store {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
   _id: mongoose.Schema.Types.ObjectId;
 
@@ -28,7 +28,7 @@ export class Stor {
 
   @ApiProperty({ example: 'Склад товару ...' })
   @Prop({ type: String, required: true })
-  composition: string;
+  ingredients: string;
 
   @ApiProperty({ example: ['Посилання на фото'] })
   @Prop({ type: [String], required: true })
@@ -39,7 +39,7 @@ export class Stor {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Stor' }],
     default: [],
   })
-  similar_products: Stor[];
+  similar_products: Store[];
 
   @ApiProperty({ example: 30 })
   @Prop({ type: Number, default: 0 })
@@ -50,11 +50,11 @@ export class Stor {
   orders: number;
 }
 
-export type StorColumnName = keyof Stor;
+export type StorColumnName = keyof Store;
 export const storColumnName: StorColumnName[] = [
   '_id',
   'category',
-  'composition',
+  'ingredients',
   'description',
   'likes',
   'orders',
@@ -64,4 +64,4 @@ export const storColumnName: StorColumnName[] = [
   'title',
 ];
 
-export const StorSchema = SchemaFactory.createForClass(Stor);
+export const StorSchema = SchemaFactory.createForClass(Store);

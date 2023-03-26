@@ -1,1 +1,1 @@
-export * from './dateNextWeek';
+export * from './nextWeekDate';

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { Stor, StorSchema } from 'src/db-schemas/stor.schema';
+import { Store, StorSchema } from 'src/db-schemas/store.schema';
 import { Orders, OrdersSchema } from 'src/db-schemas/orders.schema';
 import { AuthModule } from 'src/auth/auth.module';
 import { StoreFirebase } from 'src/firebase';
@@ -11,11 +11,11 @@ import { OrderService } from './order/order.service';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Stor.name, schema: StorSchema }]),
+    MongooseModule.forFeature([{ name: Store.name, schema: StorSchema }]),
     MongooseModule.forFeature([{ name: Orders.name, schema: OrdersSchema }]),
     AuthModule,
   ],
   controllers: [ProductController, OrderController],
   providers: [ProductService, OrderService, StoreFirebase],
 })
-export class StorModule {}
+export class StoreModule {}

@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Orders, OrdersDocument } from 'src/db-schemas/orders.schema';
-import { StorDocument } from 'src/db-schemas/stor.schema';
+import { StorDocument } from 'src/db-schemas/store.schema';
 import { ProductService } from '../product/product.service';
 import { CreateOrderDto } from './dto';
 
@@ -17,7 +17,7 @@ export class OrderService {
     const { products, contactTimeString, date, time } = createOrderDto;
 
     const productList = await this.storService.getProductsFindById(products, ['_id', 'price']);
-    const totalProseAndProductId = this.totalProseAndProductId(productList);
+    const totalPriceAndProductId = this.totalPriceAndProductId(productList);
     if (productList.length !== products.length) {
       throw new HttpException('The product does not exist', HttpStatus.UNAUTHORIZED);
     }
@@ -28,8 +28,8 @@ export class OrderService {
         contactTimeString: contactTimeString,
         date: `${date} ${time}`,
       },
-      totalPrise: totalProseAndProductId.totalPrice,
-      products: totalProseAndProductId.productId,
+      totalPrise: totalPriceAndProductId.totalPrice,
+      products: totalPriceAndProductId.productId,
       owner: userId,
     });
     const productUpdateOrder = productList.map(async product => this.storService.productOrders(product._id));
@@ -38,7 +38,7 @@ export class OrderService {
     return order;
   }
 
-  private totalProseAndProductId(productList: StorDocument[]) {
+  private totalPriceAndProductId(productList: StorDocument[]) {
     return productList.reduce(
       (acc, product) => {
         acc.productId.push(product._id);

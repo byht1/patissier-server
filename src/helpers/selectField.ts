@@ -1,5 +1,5 @@
 import { OrdersColumnName } from 'src/db-schemas/orders.schema';
-import { StorColumnName } from 'src/db-schemas/stor.schema';
+import { StorColumnName } from 'src/db-schemas/store.schema';
 
 type TValueArray = StorColumnName[] | OrdersColumnName[];
 

@@ -13,13 +13,13 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiHeaders, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ValidatePipe } from 'src/classValidator';
-import { Stor } from 'src/db-schemas/stor.schema';
-import { CreatePictureDto, CreateProductDto, GetProductsQueryParams } from './dto';
+import { Store } from 'src/db-schemas/store.schema';
+import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from './dto';
 import { ProductService } from './product.service';
-import { CategoryRecordsSwaggerSchema, CreateProductSwaggerSchema } from './schema-swagger';
+import { CategoryRecordsSwaggerSchema, CreateProductSwaggerSchema, GetAllProductsSchema } from './schema-swagger';
 
 @ApiTags('Product')
-@Controller('stor/product')
+@Controller('store/product')
 export class ProductController {
   constructor(private readonly storService: ProductService) {}
 
@@ -33,7 +33,7 @@ export class ProductController {
   ])
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateProductSwaggerSchema })
-  @ApiResponse({ status: 200, type: Stor })
+  @ApiResponse({ status: 200, type: Store })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 403, description: 'Invalid token' })
   @ApiResponse({ status: 500, description: 'Server error' })
@@ -45,14 +45,14 @@ export class ProductController {
     return this.storService.createProduct(createProductDto, file);
   }
 
-  @ApiOperation({ summary: 'List of all products' })
-  @ApiResponse({ status: 200, type: [Stor] })
+  @ApiOperation({ summary: 'Get all products' })
+  @ApiResponse({ status: 200, type: GetAllProductsSchema })
   @ApiResponse({ status: 400, description: 'The value of the query parameter is not important' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @Get()
-  getProducts(@Query() getProductsQueryParams: GetProductsQueryParams) {
-    return this.storService.getProducts(getProductsQueryParams);
+  getProducts(@Query() getAllProductsQueryParams: GetAllProductsQueryParams) {
+    return this.storService.getAllProducts(getAllProductsQueryParams);
   }
 
   @ApiOperation({ summary: 'Number of each category' })

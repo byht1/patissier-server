@@ -10,7 +10,7 @@ export class CreateProductDto {
   @IsNumberString({}, { message: priceReg.message })
   readonly price: string;
 
-  @IsEnum(ECategory, { message: 'Such a category does not exist' })
+  @IsEnum(ECategory, { message: 'This category does not exist' })
   readonly category: ECategory;
 
   @IsString({ message: errorMessageDto.notString })
@@ -23,7 +23,7 @@ export class CreateProductDto {
   @MinLength(10, {
     message: errorMessageDto.minLength(10),
   })
-  readonly composition: string;
+  readonly ingredients: string;
 
   @IsArray({ message: errorMessageDto.array.notArray })
   @ArrayMinSize(1, { message: errorMessageDto.array.minLength() })

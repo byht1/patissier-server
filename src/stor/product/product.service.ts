@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, SortOrder } from 'mongoose';
-import { Stor, StorColumnName, StorDocument } from 'src/db-schemas/stor.schema';
-import { CreatePictureDto, CreateProductDto, GetProductsQueryParams } from './dto';
+import { Store, StorColumnName, StorDocument } from 'src/db-schemas/store.schema';
+import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from './dto';
 import { EStireName, StoreFirebase } from 'src/firebase';
 import { ECategory, ETypeSortProducts } from './type';
 import { ObjectSortOrder, TRegSearch } from 'src/type';
@@ -11,7 +11,7 @@ import { selectFieldFromDb } from 'src/helpers';
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectModel(Stor.name) private storModel: Model<StorDocument>, private firebaseStore: StoreFirebase) {}
+  constructor(@InjectModel(Store.name) private storModel: Model<StorDocument>, private firebaseStore: StoreFirebase) {}
 
   async createProduct(createProductData: CreateProductDto, { picture }: CreatePictureDto) {
     const { price, similar_products, category } = createProductData;
@@ -32,7 +32,7 @@ export class ProductService {
     return newProduct;
   }
 
-  async getProducts(searchParams: GetProductsQueryParams) {
+  async getAllProducts(searchParams: GetAllProductsQueryParams) {
     const {
       page = '1',
       limit = '9',
@@ -54,12 +54,14 @@ export class ProductService {
       query['_id'] = id.split(',');
     }
 
-    const productsList = await this.storModel
+    const productsListPromise = this.storModel
       .find(query)
       .skip((+page - 1) * +limit)
       .limit(+limit)
       .sort(findSort)
       .select(select);
+    const totalProductPromise = this.storModel.countDocuments().exec();
+    const [productsList, totalProduct] = await Promise.all([productsListPromise, totalProductPromise]);
 
     if (id) {
       const checkId = Array.isArray(query?._id) ? query?._id.length : 0;
@@ -71,7 +73,7 @@ export class ProductService {
       }
     }
 
-    return productsList;
+    return { products: productsList, limit: totalProduct };
   }
 
   async getProductsFindById(id: string | string[], select?: StorColumnName[]): Promise<StorDocument[]> {

@@ -6,6 +6,16 @@ export enum ETypeSortProducts {
   OLD = 'old',
 }
 
+const { MAX_MIN, MIN_MAX, NEW, OLD, POPULAR } = ETypeSortProducts;
+
+const sortExplanation = [
+  { abbreviation: MAX_MIN, explanation: 'Сортування від дорощого до дешевшого' },
+  { abbreviation: MIN_MAX, explanation: 'Сортування від дешевшого до дорощого' },
+  { abbreviation: NEW, explanation: 'Спочатку нові' },
+  { abbreviation: OLD, explanation: 'Спочатку старі' },
+  { abbreviation: POPULAR, explanation: 'Спочатку популярні' },
+];
+
 export const convertorETypeSortProducts = (typeJoin?: string) => {
   const values = Object.values(ETypeSortProducts);
 
@@ -14,4 +24,12 @@ export const convertorETypeSortProducts = (typeJoin?: string) => {
   }
 
   return values;
+};
+
+export const sortExplanationSwagger = () => {
+  return sortExplanation.reduce((acc, el) => {
+    const message = `<br /> <b>${el.abbreviation}</b> - ${el.explanation}`;
+    acc += message;
+    return acc;
+  }, '');
 };
