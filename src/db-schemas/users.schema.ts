@@ -1,4 +1,4 @@
-import { Course } from 'src/db-schemas/courses.schema';
+import { Course } from 'src/db-schemas/course.schema';
 import { Review } from 'src/db-schemas/reviews.schema';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';

@@ -1,6 +1,6 @@
 import { Controller, Post, Get, Query, Body } from '@nestjs/common';
-import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Course } from 'src/db-schemas/courses.schema';
+import { ApiConsumes, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Course } from 'src/db-schemas/course.schema';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { SearchCourseDto } from './dto/search-courses.dto';
@@ -12,10 +12,12 @@ export class CoursesController {
 
   @ApiOperation({ summary: 'Get array all Courses' })
   @ApiResponse({ status: 200, type: [Course] })
-  @Get('/all')
+  @Get()
   getAllCourses() {
-    return this.coursesService.getAllCourses();
+    return;
+    // return this.coursesService.getAllCourses();
   }
+
   @ApiQuery({
     name: 'online',
     description: 'online values that need to be considered for filter',
@@ -24,12 +26,22 @@ export class CoursesController {
   @ApiResponse({ status: 200, type: [Course] })
   @Get()
   getCourses(@Query() dto: SearchCourseDto) {
-    return this.coursesService.getCoursesBy(dto);
+  return 
+    // return this.coursesService.getCoursesBy(dto);
   }
-  @ApiOperation({ summary: 'Create Course' })
-  @ApiResponse({ status: 200, type: [Course] })
+
+
+  @ApiOperation({ summary: 'Create course' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 201, type: Course, description: 'Course created' })
   @Post()
   CreateCourse(@Body() dto: CreateCourseDto) {
-    return this.coursesService.createCourse(dto);
+    return;
+    // return this.coursesService.createCourse(dto);
   }
+
+  // замінити картинки до курсу (1 або 2)
+  // змінювати будь-яку інформацію про курс
+  // видалити курс/м-клас
+  
 }
