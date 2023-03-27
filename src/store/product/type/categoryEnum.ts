@@ -1,10 +1,4 @@
-export enum ECategory {
-  CAKES = 'Торт',
-  DESSERTS = 'Десерт',
-  COOKIES = 'Печиво',
-  BUNS = 'Булка',
-  PIES = 'Пирог',
-}
+import { ECategory } from 'src/db-schemas/product.schema';
 
 export type ECategoryUnion = `${ECategory}`;
 

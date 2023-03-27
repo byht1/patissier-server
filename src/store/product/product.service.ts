@@ -1,28 +1,33 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, SortOrder } from 'mongoose';
-import { Store, StorColumnName, StorDocument } from 'src/db-schemas/store.schema';
+import { Product, ECategory, StorColumnName, ProductDocument } from 'src/db-schemas/product.schema';
 import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from './dto';
-import { EStireName, StoreFirebase } from 'src/firebase';
-import { ECategory, ETypeSortProducts } from './type';
+import { EStireName, FirebaseStorageManager } from 'src/firebase';
+import { ETypeSortProducts } from './type';
 import { ObjectSortOrder, TRegSearch } from 'src/type';
-import { queryRegexGenerator } from 'src/stor/product/helpers';
+import { queryRegexGenerator } from 'src/store/product/helpers';
 import { selectFieldFromDb } from 'src/helpers';
+
+//;
 
 @Injectable()
 export class ProductService {
-  constructor(@InjectModel(Store.name) private storModel: Model<StorDocument>, private firebaseStore: StoreFirebase) {}
+  constructor(
+    @InjectModel(Product.name) private productModel: Model<ProductDocument>,
+    private firebaseStorageManager: FirebaseStorageManager,
+  ) {}
 
   async createProduct(createProductData: CreateProductDto, { picture }: CreatePictureDto) {
     const { price, similar_products, category } = createProductData;
-    const pictureUrlPromise = this.firebaseStore.uploadFileArray(picture, EStireName.STOR);
+    const pictureUrlPromise = this.firebaseStorageManager.uploadFileArray(picture, EStireName.STORE);
     const similarProductsPromise = similar_products
       ? this.checkProductById(similar_products, category)
       : this.getRandomItemsByCategory(category);
 
     const [pictureUrl, similarProducts] = await Promise.all([pictureUrlPromise, similarProductsPromise]);
 
-    const newProduct = await this.storModel.create({
+    const newProduct = await this.productModel.create({
       ...createProductData,
       picture: pictureUrl,
       price: +price,
@@ -54,13 +59,13 @@ export class ProductService {
       query['_id'] = id.split(',');
     }
 
-    const productsListPromise = this.storModel
+    const productsListPromise = this.productModel
       .find(query)
       .skip((+page - 1) * +limit)
       .limit(+limit)
       .sort(findSort)
       .select(select);
-    const totalProductPromise = this.storModel.countDocuments().exec();
+    const totalProductPromise = this.productModel.countDocuments().exec();
     const [productsList, totalProduct] = await Promise.all([productsListPromise, totalProductPromise]);
 
     if (id) {
@@ -76,18 +81,18 @@ export class ProductService {
     return { products: productsList, limit: totalProduct };
   }
 
-  async getProductsFindById(id: string | string[], select?: StorColumnName[]): Promise<StorDocument[]> {
+  async getProductsFindById(id: string | string[], select?: StorColumnName[]): Promise<ProductDocument[]> {
     const idList = typeof id === 'string' ? id.split(',') : id;
     const inputPick = select ? selectFieldFromDb(select) : {};
-    return await this.storModel.find({ _id: idList }).select(inputPick);
+    return await this.productModel.find({ _id: idList }).select(inputPick);
   }
 
   async productOrders(id: ObjectId) {
-    await this.storModel.findByIdAndUpdate(id, { $inc: { orders: 1 } });
+    await this.productModel.findByIdAndUpdate(id, { $inc: { orders: 1 } });
   }
 
   async countRecordsByCategory() {
-    const categoryCounts = await this.storModel.aggregate([
+    const categoryCounts = await this.productModel.aggregate([
       {
         $group: {
           _id: '$category',
@@ -98,7 +103,7 @@ export class ProductService {
 
     return [...categoryCounts].sort((a, b) => a._id.localeCompare(b._id));
   }
-  private async checkProductsListForSimilar(productsList: StorDocument[]) {
+  private async checkProductsListForSimilar(productsList: ProductDocument[]) {
     const update = [];
     const checkProductsListForSimilar = productsList.map(async product => {
       const similarProducts = product.similar_products.length;
@@ -110,7 +115,7 @@ export class ProductService {
           product.similar_products.push(similar[0]);
         }
       }
-      const funcUpdateSimilarProducts = this.storModel.findByIdAndUpdate(product._id, {
+      const funcUpdateSimilarProducts = this.productModel.findByIdAndUpdate(product._id, {
         similar_products: product.similar_products,
       });
 
@@ -172,14 +177,14 @@ export class ProductService {
   }
 
   private async getRandomItemsByCategory(category: ECategory, number = 3): Promise<ObjectId[]> {
-    const randomItems = await this.storModel
+    const randomItems = await this.productModel
       .aggregate([{ $match: { category } }, { $sample: { size: number } }, { $project: { _id: 1 } }])
       .exec();
     return randomItems;
   }
 
   private async checkProductById(productId: ObjectId[] | string[], category: ECategory) {
-    const checkProductPromise = productId.map(async id => this.storModel.findById(id));
+    const checkProductPromise = productId.map(async id => this.productModel.findById(id));
     const checkProduct = await Promise.all(checkProductPromise);
 
     if (!checkProduct.length) {

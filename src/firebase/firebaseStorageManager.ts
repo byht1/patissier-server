@@ -5,11 +5,11 @@ import { Firebase } from './firebase';
 
 export enum EStireName {
   COURSES = 'courses',
-  STOR = 'stor',
+  STORE = 'store',
 }
 
 @Injectable()
-export class StoreFirebase extends Firebase {
+export class FirebaseStorageManager extends Firebase {
   private storage: FirebaseStorage;
 
   constructor() {

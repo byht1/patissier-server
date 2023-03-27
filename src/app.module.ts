@@ -6,7 +6,7 @@ import { UsersModule } from './users/users.module';
 import { CatalogModule } from './catalog/catalog.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AuthModule } from './auth/auth.module';
-import { StoreModule } from './stor/store.module';
+import { StoreModule } from './store/store.module';
 
 @Module({
   imports: [

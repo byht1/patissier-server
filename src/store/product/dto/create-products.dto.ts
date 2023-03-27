@@ -1,6 +1,6 @@
 import { IsString, IsEnum, MinLength, IsOptional, IsArray, ArrayMinSize, IsNumberString } from 'class-validator';
 import { errorMessageDto, priceReg } from 'src/classValidator';
-import { ECategory } from '../type';
+import { ECategory } from 'src/db-schemas/product.schema';
 
 export class CreateProductDto {
   @IsString({ message: errorMessageDto.notString })
