@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { convertorECategory, ECategory } from '../type';
+import { ECategory } from 'src/db-schemas/product.schema';
+import { convertorECategory } from '../type';
 
 export class CreateProductSwaggerSchema {
   @ApiProperty({ description: 'Заголовок товару' })

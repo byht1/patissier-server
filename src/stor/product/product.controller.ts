@@ -13,7 +13,7 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiConsumes, ApiHeaders, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ValidatePipe } from 'src/classValidator';
-import { Store } from 'src/db-schemas/store.schema';
+import { Product } from 'src/db-schemas/product.schema';
 import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from './dto';
 import { ProductService } from './product.service';
 import { CategoryRecordsSwaggerSchema, CreateProductSwaggerSchema, GetAllProductsSchema } from './schema-swagger';
@@ -33,14 +33,14 @@ export class ProductController {
   ])
   @ApiConsumes('multipart/form-data')
   @ApiBody({ type: CreateProductSwaggerSchema })
-  @ApiResponse({ status: 200, type: Store })
+  @ApiResponse({ status: 200, type: Product })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 403, description: 'Invalid token' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UseInterceptors(FileFieldsInterceptor([{ name: 'picture', maxCount: 2 }]))
   @UsePipes(ValidatePipe)
   @UseGuards(JwtAuthGuard)
-  @Post('create')
+  @Post()
   createProduct(@Body() createProductDto: CreateProductDto, @UploadedFiles() file: CreatePictureDto) {
     return this.storService.createProduct(createProductDto, file);
   }
