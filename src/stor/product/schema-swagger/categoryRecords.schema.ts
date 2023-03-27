@@ -4,6 +4,6 @@ export class CategoryRecordsSwaggerSchema {
   @ApiProperty({ description: 'Значення категорії' })
   readonly _id: string;
 
-  @ApiProperty({ description: 'Кількість записів згідно категорії' })
+  @ApiProperty({ description: 'Кількість продуктів даної категорії' })
   readonly count: number;
 }

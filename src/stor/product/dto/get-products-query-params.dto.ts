@@ -7,8 +7,8 @@ import {
   TValidateRequestFieldsSetting,
   ValidateRequestFields,
 } from 'src/classValidator';
-import { storColumnName } from 'src/db-schemas/store.schema';
-import { convertorECategory, ECategory, ETypeSortProducts, sortExplanationSwagger } from '../type';
+import { ECategory, storColumnName } from 'src/db-schemas/product.schema';
+import { convertorECategory, ETypeSortProducts, sortExplanationSwagger } from '../type';
 
 const groupSelect: TValidateRequestFieldsSetting = {
   groupOne: ['pick_field'],

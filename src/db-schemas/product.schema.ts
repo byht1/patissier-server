@@ -1,12 +1,19 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
-import { ECategory } from 'src/stor/product/type';
 
-export type StorDocument = Store & Document;
+export enum ECategory {
+  CAKES = 'Торт',
+  DESSERTS = 'Десерт',
+  COOKIES = 'Печиво',
+  BUNS = 'Булка',
+  PIES = 'Пирог',
+}
+
+export type ProductDocument = Product & Document;
 
 @Schema({ versionKey: false, timestamps: true })
-export class Store {
+export class Product {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
   _id: mongoose.Schema.Types.ObjectId;
 
@@ -39,7 +46,7 @@ export class Store {
     type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Stor' }],
     default: [],
   })
-  similar_products: Store[];
+  similar_products: Product[];
 
   @ApiProperty({ example: 30 })
   @Prop({ type: Number, default: 0 })
@@ -50,7 +57,7 @@ export class Store {
   orders: number;
 }
 
-export type StorColumnName = keyof Store;
+export type StorColumnName = keyof Product;
 export const storColumnName: StorColumnName[] = [
   '_id',
   'category',
@@ -64,4 +71,4 @@ export const storColumnName: StorColumnName[] = [
   'title',
 ];
 
-export const StorSchema = SchemaFactory.createForClass(Store);
+export const ProductSchema = SchemaFactory.createForClass(Product);

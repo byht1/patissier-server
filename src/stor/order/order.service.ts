@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Orders, OrdersDocument } from 'src/db-schemas/orders.schema';
-import { StorDocument } from 'src/db-schemas/store.schema';
+import { ProductDocument } from 'src/db-schemas/product.schema';
 import { ProductService } from '../product/product.service';
 import { CreateOrderDto } from './dto';
 
@@ -38,7 +38,7 @@ export class OrderService {
     return order;
   }
 
-  private totalPriceAndProductId(productList: StorDocument[]) {
+  private totalPriceAndProductId(productList: ProductDocument[]) {
     return productList.reduce(
       (acc, product) => {
         acc.productId.push(product._id);
