@@ -1,1 +1,1 @@
-export * from './storeFirebase.service';
+export * from './firebaseStorageManager';
