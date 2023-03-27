@@ -6,7 +6,7 @@ import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from '.
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { ETypeSortProducts } from './type';
 import { ObjectSortOrder, TRegSearch } from 'src/type';
-import { queryRegexGenerator } from 'src/stor/product/helpers';
+import { queryRegexGenerator } from 'src/store/product/helpers';
 import { selectFieldFromDb } from 'src/helpers';
 
 //;

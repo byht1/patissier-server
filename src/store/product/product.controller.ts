@@ -55,7 +55,7 @@ export class ProductController {
     return this.storService.getAllProducts(getAllProductsQueryParams);
   }
 
-  @ApiOperation({ summary: 'Number of each category' })
+  @ApiOperation({ summary: 'Number of products in this category' })
   @ApiResponse({ status: 200, type: [CategoryRecordsSwaggerSchema] })
   @ApiResponse({ status: 500, description: 'Server error' })
   @Get('category-records')
