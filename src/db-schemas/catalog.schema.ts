@@ -22,7 +22,7 @@ export class Catalog {
   title: string;
 
   @ApiProperty({
-    example: 'Ніжний заварний крем та зрусткк печиво...',
+    example: 'Ніжний заварний крем та хрусткий печиво...',
   })
   @Prop({ type: String, required: true })
   description: string;

@@ -7,8 +7,7 @@ export const passwordSchema = Object.freeze({
   symbol: /(?=.*[!@#$%^&*_])/,
   number: /(?=.*[0-9])/,
   min: /[0-9a-zA-Z!@#$%^&*_]{7,}/,
-  original:
-    /(?=.*[0-9])(?=.*[!@#$%^&*_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*_]{7,}/,
+  original: /(?=.*[0-9])(?=.*[!@#$%^&*_])(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z!@#$%^&*_]{7,}/,
 });
 
 export class NewUserDto {
@@ -27,15 +26,15 @@ export class NewUserDto {
     message: 'Пароль повинен містити одну цифру',
   })
   @Matches(passwordSchema.symbol, {
-    message: 'Пароль повинен містити хотяби один сцец символ',
+    message: 'Пароль повинен містити хоча б один спеціальний символ',
   })
   @Matches(passwordSchema.upperCase, {
-    message: 'Пароль повинен містити хотяби одиу велику літеру',
+    message: 'Пароль повинен містити хоча б один велику літеру',
   })
   @Matches(passwordSchema.lowerCase, {
-    message: 'Пароль повинен містити хотяби одиу маленьку літеру',
+    message: 'Пароль повинен містити хоча б один маленьку літеру',
   })
-  @MinLength(7, { message: 'Мінімум 7 симфолів' })
+  @MinLength(7, { message: 'Мінімум 7 символ' })
   @Matches(passwordSchema.original, { message: 'Не валідний пароль' })
   readonly password: string;
 }

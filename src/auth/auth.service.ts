@@ -157,10 +157,7 @@ export class AuthService {
     return;
   }
 
-  async forgottenPasswordNew(
-    newPassword: string,
-    linkId: string,
-  ): Promise<void> {
+  async forgottenPasswordNew(newPassword: string, linkId: string): Promise<void> {
     const isUser = await this.forgottenPasswordUserSearch(linkId);
 
     const hashPassword = await this.bcryptPassword(newPassword);
@@ -174,9 +171,7 @@ export class AuthService {
     return;
   }
 
-  private async forgottenPasswordUserSearch(
-    forgottenPasswordToken: string,
-  ): Promise<UsersDocument> {
+  private async forgottenPasswordUserSearch(forgottenPasswordToken: string): Promise<UsersDocument> {
     const isUser = await this.usersModel.findOne({
       forgottenPasswordToken,
     });

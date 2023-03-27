@@ -70,7 +70,7 @@ export class GetAllProductsQueryParams {
     description: `Вибір по категорії<br />
     <b>Приклад:</b> ...?category=Десерт то сервер надасть відповідь лише цієї категорії<br />
     <b>Доступні поля для вводу:</b> ${convertorECategory(', ')}<br />
-    <b>НЕ ВИКОРИСТОВУЄТЬСЯ разом з полeм id</b>`,
+    <b>НЕ ВИКОРИСТОВУЄТЬСЯ разом з полем id</b>`,
     example: 'Десерт',
     required: false,
   })
@@ -90,7 +90,7 @@ export class GetAllProductsQueryParams {
   @IsOptional()
   readonly sort?: string;
 
-  @ApiProperty({ description: 'Пошук <br /><b>НЕ ВИКОРИСТОВУЄТЬСЯ разом з полeм id</b>', required: false })
+  @ApiProperty({ description: 'Пошук <br /><b>НЕ ВИКОРИСТОВУЄТЬСЯ разом з полем id</b>', required: false })
   @IsString({ message: errorMessageDto.notString })
   @ValidateRequestFields(groupSearchAndFilter)
   @IsOptional()
@@ -99,7 +99,7 @@ export class GetAllProductsQueryParams {
   @ApiProperty({
     description: `Вибір поля для пошуку:<br />
     <b>Доступні поля для вводу:</b> ${convertorECategory(', ')}<br />
-    <b>НЕ ВИКОРИСТОВУЄТЬСЯ БЕЗ полeм search</b>`,
+    <b>НЕ ВИКОРИСТОВУЄТЬСЯ БЕЗ поля search</b>`,
     required: false,
     default: 'title',
   })

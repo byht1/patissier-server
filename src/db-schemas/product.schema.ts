@@ -7,7 +7,7 @@ export enum ECategory {
   DESSERTS = 'Десерт',
   COOKIES = 'Печиво',
   BUNS = 'Булка',
-  PIES = 'Пирог',
+  PIES = 'Пиріг',
 }
 
 export type ProductDocument = Product & Document;
