@@ -26,12 +26,12 @@ import {
   GetAllProductsSchema,
 } from './schema-swagger';
 import { IReqUser } from 'src/type';
-import { ProductAndFavoriteService } from './services/product-and-favorite.service';
+import { ProductFavoriteService } from './services/product-favorite.service';
 
 @ApiTags('Product')
 @Controller('store/product')
 export class ProductController {
-  constructor(private storService: ProductService, private productAndFavoriteService: ProductAndFavoriteService) {}
+  constructor(private storService: ProductService, private productFavoriteService: ProductFavoriteService) {}
 
   @ApiOperation({ summary: 'Add a new product' })
   @ApiHeaders([
@@ -88,7 +88,7 @@ export class ProductController {
   @UseGuards(JwtAuthGuard)
   @Get('add-favorite/:productId')
   addFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser) {
-    return this.productAndFavoriteService.addToFavorite(req.user._id, productId);
+    return this.productFavoriteService.addToFavorite(req.user._id, productId);
   }
 
   @ApiOperation({ summary: 'Delete to favorite' })
@@ -106,6 +106,6 @@ export class ProductController {
   @UseGuards(JwtAuthGuard)
   @Get('delete-favorite/:productId')
   deleteFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser) {
-    return this.productAndFavoriteService.deleteToFavorite(req.user._id, productId);
+    return this.productFavoriteService.deleteToFavorite(req.user._id, productId);
   }
 }

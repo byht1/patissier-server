@@ -9,8 +9,8 @@ import { ProductService } from './product/services/product.service';
 import { OrderController } from './order/order.controller';
 import { OrderService } from './order/order.service';
 import { UsersModule } from 'src/users/users.module';
-import { UserAndStoreService } from 'src/users/services/user-and-store.service';
-import { ProductAndFavoriteService } from './product/services/product-and-favorite.service';
+import { ProductFavoriteService } from './product/services/product-favorite.service';
+import { UserFavoriteService } from 'src/users/services/user-favorite.service';
 
 @Module({
   imports: [
@@ -20,6 +20,6 @@ import { ProductAndFavoriteService } from './product/services/product-and-favori
     UsersModule,
   ],
   controllers: [ProductController, OrderController],
-  providers: [ProductService, OrderService, FirebaseStorageManager, ProductAndFavoriteService, UserAndStoreService],
+  providers: [ProductService, OrderService, FirebaseStorageManager, ProductFavoriteService, UserFavoriteService],
 })
 export class StoreModule {}
