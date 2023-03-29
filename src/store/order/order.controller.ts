@@ -20,7 +20,7 @@ export class OrderController {
       description: 'User access token.',
     },
   ])
-  @ApiResponse({ status: 200, type: Orders })
+  @ApiResponse({ status: 201, type: Orders })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 403, description: 'Invalid token' })
   @ApiResponse({ status: 500, description: 'Server error' })
