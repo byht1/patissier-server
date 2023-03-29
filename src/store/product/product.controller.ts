@@ -91,7 +91,7 @@ export class ProductController {
     return this.productFavoriteService.addToFavorite(req.user._id, productId);
   }
 
-  @ApiOperation({ summary: 'Delete to favorite' })
+  @ApiOperation({ summary: 'user to favorite' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -107,5 +107,22 @@ export class ProductController {
   @Get('delete-favorite/:productId')
   deleteFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser) {
     return this.productFavoriteService.deleteToFavorite(req.user._id, productId);
+  }
+
+  @ApiOperation({ summary: 'User favorite' })
+  @ApiHeaders([
+    {
+      name: 'Authorization',
+      required: true,
+      description: 'User access token.',
+    },
+  ])
+  @ApiResponse({ status: 201, type: Favorite })
+  @ApiResponse({ status: 403, description: 'Invalid token' })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  @UseGuards(JwtAuthGuard)
+  @Get('user-favorite')
+  userFavorite(@Req() req: IReqUser) {
+    return this.productFavoriteService.userToFavorite(req.user._id);
   }
 }

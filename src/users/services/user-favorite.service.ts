@@ -21,4 +21,9 @@ export class UserFavoriteService {
       .select({ favorites: 1 });
     return user.favorites;
   }
+
+  async userFavorite(userId: ObjectId) {
+    const user = await this.usersModel.findById(userId).select({ favorites: 1 });
+    return user.favorites;
+  }
 }

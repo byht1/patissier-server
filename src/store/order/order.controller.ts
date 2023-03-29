@@ -34,7 +34,7 @@ export class OrderController {
     return this.orderService.createOrder(createOrderDto, req.user._id);
   }
 
-  @ApiOperation({ summary: 'add product to basket' })
+  @ApiOperation({ summary: 'Add product to basket' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -57,7 +57,7 @@ export class OrderController {
     return this.orderBasketService.addToBasket(req.user._id, productId, basketQueryParams);
   }
 
-  @ApiOperation({ summary: 'delete product to basket' })
+  @ApiOperation({ summary: 'Delete product to basket' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -80,7 +80,7 @@ export class OrderController {
     return this.orderBasketService.deleteToBasket(req.user._id, productId, basketQueryParams);
   }
 
-  @ApiOperation({ summary: 'user basket' })
+  @ApiOperation({ summary: 'User basket' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -90,12 +90,11 @@ export class OrderController {
   ])
   @ApiResponse({ status: 201, type: Basket })
   @ApiResponse({ status: 403, description: 'Invalid token' })
-  @ApiResponse({ status: 404, description: 'Product with ID ${productId} not found' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @UseGuards(JwtAuthGuard)
   @Get('user-basket')
-  allBasketId(@Req() req: IReqUser, @Query() basketQueryParams: BasketQueryParams) {
+  userBasketId(@Req() req: IReqUser, @Query() basketQueryParams: BasketQueryParams) {
     return this.orderBasketService.allBasketId(req.user._id, basketQueryParams);
   }
 }

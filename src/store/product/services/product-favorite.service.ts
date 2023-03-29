@@ -22,4 +22,8 @@ export class ProductFavoriteService {
     if (!isProduct) throw new NotFoundException(`Product with ID ${productId} not found`);
     return { favorites: await this.userFavoriteService.deleteToFavorite(userId, productId) };
   }
+
+  async userToFavorite(userId: ObjectId) {
+    return { favorites: await this.userFavoriteService.userFavorite(userId) };
+  }
 }
