@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 
 export enum ECategory {
   CAKES = 'Торт',
-  DESSERTS = 'Десерт',
+  CASSEROLE = 'Запіканки',
   COOKIES = 'Печиво',
   BUNS = 'Булка',
   PIES = 'Пиріг',
