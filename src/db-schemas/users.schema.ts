@@ -4,6 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose, { ObjectId } from 'mongoose';
 import { Orders } from './orders.schema';
+import { Product } from './product.schema';
 // import mongoose from 'mongoose';
 
 export type UsersDocument = Users & Document;
@@ -90,6 +91,20 @@ export class Users {
   })
   @Prop({ type: String, default: null })
   forgottenPassword: string;
+
+  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    default: [],
+  })
+  basket: Product[];
+
+  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  @Prop({
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Product' }],
+    default: [],
+  })
+  favorites: Product[];
 
   // @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   // @Prop({
