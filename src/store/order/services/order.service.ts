@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Orders, OrdersDocument } from 'src/db-schemas/orders.schema';
 import { ProductDocument } from 'src/db-schemas/product.schema';
-import { ProductService } from '../product/services/product.service';
-import { CreateOrderDto } from './dto';
+import { ProductService } from '../../product/services/product.service';
+import { CreateOrderDto } from '../dto';
 
 @Injectable()
 export class OrderService {

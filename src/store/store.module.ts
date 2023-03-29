@@ -7,10 +7,12 @@ import { FirebaseStorageManager } from 'src/firebase';
 import { ProductController } from './product/product.controller';
 import { ProductService } from './product/services/product.service';
 import { OrderController } from './order/order.controller';
-import { OrderService } from './order/order.service';
+import { OrderService } from './order/services/order.service';
 import { UsersModule } from 'src/users/users.module';
 import { ProductFavoriteService } from './product/services/product-favorite.service';
 import { UserFavoriteService } from 'src/users/services/user-favorite.service';
+import { UserBasketService } from 'src/users/services/user-basket.service';
+import { OrderBasketService } from './order/services/order-basket.service';
 
 @Module({
   imports: [
@@ -20,6 +22,14 @@ import { UserFavoriteService } from 'src/users/services/user-favorite.service';
     UsersModule,
   ],
   controllers: [ProductController, OrderController],
-  providers: [ProductService, OrderService, FirebaseStorageManager, ProductFavoriteService, UserFavoriteService],
+  providers: [
+    ProductService,
+    OrderService,
+    FirebaseStorageManager,
+    ProductFavoriteService,
+    UserFavoriteService,
+    UserBasketService,
+    OrderBasketService,
+  ],
 })
 export class StoreModule {}
