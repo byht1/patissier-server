@@ -9,7 +9,7 @@ import { Users, UsersDocument } from 'src/db-schemas/users.schema';
 import { TNewUser } from './type';
 import { EmailMessageService } from 'src/email-message/email-message.service';
 import { LogInDto, NewPasswordDto, NewUserDto } from './dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/services/users.service';
 
 // 401 Access allowed only for registered users. доступ тільки для зареєстрованих
 

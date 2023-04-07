@@ -3,11 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
 export enum ECategory {
-  CAKES = 'Торт',
-  CASSEROLE = 'Запіканки',
+  CAKES = 'Торти',
+  CASSEROLE = 'Тістечка',
   COOKIES = 'Печиво',
-  BUNS = 'Булка',
-  PIES = 'Пиріг',
+  BUNS = 'Випічка',
+  PIES = 'Пироги',
 }
 
 export type ProductDocument = Product & Document;

@@ -3,8 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Orders, OrdersDocument } from 'src/db-schemas/orders.schema';
 import { ProductDocument } from 'src/db-schemas/product.schema';
-import { ProductService } from '../product/product.service';
-import { CreateOrderDto } from './dto';
+import { ProductService } from '../../product/services/product.service';
+import { CreateOrderDto } from '../dto';
 
 @Injectable()
 export class OrderService {
@@ -19,7 +19,7 @@ export class OrderService {
     const productList = await this.storService.getProductsFindById(products, ['_id', 'price']);
     const totalPriceAndProductId = this.totalPriceAndProductId(productList);
     if (productList.length !== products.length) {
-      throw new HttpException('The product does not exist', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('The product does not exist', HttpStatus.BAD_REQUEST);
     }
 
     const orderPromise = this.orderModel.create({
