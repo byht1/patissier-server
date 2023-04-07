@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiHeaders, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ObjectId } from 'mongoose';
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
@@ -49,7 +49,7 @@ export class OrderController {
   @UsePipes(ValidatePipe)
   @UseGuards(JwtAuthGuard)
   @Get('add-basket/:productId')
-  addBasket(
+  addToBasket(
     @Param('productId') productId: ObjectId,
     @Req() req: IReqUser,
     @Query() basketQueryParams: BasketQueryParams,
@@ -57,7 +57,7 @@ export class OrderController {
     return this.orderBasketService.addToBasket(req.user._id, productId, basketQueryParams);
   }
 
-  @ApiOperation({ summary: 'Delete product to basket' })
+  @ApiOperation({ summary: 'Delete product from basket' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -65,14 +65,14 @@ export class OrderController {
       description: 'User access token.',
     },
   ])
-  @ApiResponse({ status: 201, type: Basket })
+  @ApiResponse({ status: 200, type: Basket, description: 'Product deleted from basket' })
   @ApiResponse({ status: 403, description: 'Invalid token' })
-  @ApiResponse({ status: 404, description: 'Product with ID ${productId} not found' })
+  @ApiResponse({ status: 404, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @UseGuards(JwtAuthGuard)
-  @Get('delete-basket/:productId')
-  deleteBasket(
+  @Delete('basket/:productId')
+  deleteFromBasket(
     @Param('productId') productId: ObjectId,
     @Req() req: IReqUser,
     @Query() basketQueryParams: BasketQueryParams,
@@ -80,7 +80,7 @@ export class OrderController {
     return this.orderBasketService.deleteToBasket(req.user._id, productId, basketQueryParams);
   }
 
-  @ApiOperation({ summary: 'User basket' })
+  @ApiOperation({ summary: 'Get user basket' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -88,13 +88,13 @@ export class OrderController {
       description: 'User access token.',
     },
   ])
-  @ApiResponse({ status: 201, type: Basket })
+  @ApiResponse({ status: 200, type: Basket, description: 'Ok' })
   @ApiResponse({ status: 403, description: 'Invalid token' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @UseGuards(JwtAuthGuard)
   @Get('user-basket')
-  userBasketId(@Req() req: IReqUser, @Query() basketQueryParams: BasketQueryParams) {
+  getUserBasket(@Req() req: IReqUser, @Query() basketQueryParams: BasketQueryParams) {
     return this.orderBasketService.allBasketId(req.user._id, basketQueryParams);
   }
 }

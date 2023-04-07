@@ -40,7 +40,7 @@ export class ProductService {
   async getAllProducts(searchParams: GetAllProductsQueryParams) {
     const {
       page = '1',
-      limit = '9',
+      limit = '3',
       sort,
       category,
       search,
@@ -59,12 +59,9 @@ export class ProductService {
       query['_id'] = id.split(',');
     }
 
-    const productsListPromise = this.productModel
-      .find(query)
-      .skip((+page - 1) * +limit)
-      .limit(+limit)
-      .sort(findSort)
-      .select(select);
+    const skip = (+page - 1) * +limit;
+
+    const productsListPromise = this.productModel.find(query).select(select).skip(skip).limit(+limit).sort(findSort);
     const totalProductPromise = this.productModel.countDocuments().exec();
     const [productsList, totalProduct] = await Promise.all([productsListPromise, totalProductPromise]);
 

@@ -19,7 +19,7 @@ export class OrderService {
     const productList = await this.storService.getProductsFindById(products, ['_id', 'price']);
     const totalPriceAndProductId = this.totalPriceAndProductId(productList);
     if (productList.length !== products.length) {
-      throw new HttpException('The product does not exist', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('The product does not exist', HttpStatus.BAD_REQUEST);
     }
 
     const orderPromise = this.orderModel.create({

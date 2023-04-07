@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -104,7 +105,7 @@ export class ProductController {
   @ApiResponse({ status: 404, description: 'Product with ID ${productId} not found' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UseGuards(JwtAuthGuard)
-  @Get('delete-favorite/:productId')
+  @Delete('favorite/:productId')
   deleteFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser) {
     return this.productFavoriteService.deleteToFavorite(req.user._id, productId);
   }
