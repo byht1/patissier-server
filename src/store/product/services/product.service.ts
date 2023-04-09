@@ -62,7 +62,7 @@ export class ProductService {
     const skip = (+page - 1) * +limit;
 
     const productsListPromise = this.productModel.find(query).select(select).skip(skip).limit(+limit).sort(findSort);
-    const totalProductPromise = this.productModel.countDocuments().exec();
+    const totalProductPromise = this.productModel.countDocuments(query).exec();
     const [productsList, totalProduct] = await Promise.all([productsListPromise, totalProductPromise]);
 
     if (id) {
