@@ -5,13 +5,16 @@ export class SearchCourseDto {
   @ApiProperty({
     example: 'true',
     description: 'String for search Course by online offline',
+    required: false,
   })
   @IsString({ message: 'Should be text' })
-  readonly online: string;
-  @ApiProperty({
-    example: 'all',
-    description: 'String for search Course by category',
-  })
-  @IsString({ message: 'Should be text' })
-  readonly category: string;
+  readonly online?: string;
+  
+  // @ApiProperty({
+  //   example: 'all',
+  //   description: 'String for search Course by category',
+  //   required: false,
+  // })
+  // @IsString({ message: 'Should be text' })
+  // readonly category?: string;
 }

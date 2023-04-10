@@ -1,32 +1,34 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
+import { EType } from 'src/db-schemas/course.schema';
 // * - можливо поміняти description
 
 export class CreateCourseDto {
   @ApiProperty({
+    example: 'course',
+    description: 'Тип: "Курс" або "Майстер-клас"',
+  })
+  @IsString({ message: 'Should be text' })
+  readonly type: EType;
+
+  @ApiProperty({
     example: 'Торти',
-    description: 'Категорія курсів',
+    description: 'Категорія курсу',
   })
   @IsString({ message: 'Should be text' })
   readonly category: string;
 
   @ApiProperty({
     example: 'На курсі ви навчитеся працювати з різними видами тіста...',
-    description: '*preview Text',
+    description: 'Короткий текст-прев\'ю',
   })
   readonly previewText: string;
 
-  // @ApiProperty({
-  //   example: 'На курсі ви навчитеся працювати з різними видами тіста...',
-  //   description: '*preview Text',
-  // })
-  // readonly images: string[];
-
   @ApiProperty({
     example: 12,
-    description: '*Загальна кількість місць на курс даної категорії',
+    description: '*Загальна кількість місць на курс даної категорії', // (поточної)
   })
-  readonly availablePlaceQuantity: number;
+  readonly totalPlaces: number;
 
   @ApiProperty({
     example: 5,
@@ -36,7 +38,7 @@ export class CreateCourseDto {
 
   @ApiProperty({
     example: 'Програма навчання розрахована як для кондитерів-початківців, так і для тих, хто хоче підвищити рівень своєї майстерності.',
-    description: '*Повний детальний опис курсу (даної категорії)',
+    description: 'Повний детальний опис курсу даної категорії',
   })
   readonly description: string;
 }
