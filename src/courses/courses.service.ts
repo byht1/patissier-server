@@ -35,14 +35,19 @@ export class CoursesService {
     return course;
   }
 
-  async createCourse(dto: CreateCourseDto, { picture }: UploadPictureDto): Promise<Course> {
-    const pictureUrlPromise = await this.firebaseStorage.uploadFileArray(picture, EStireName.COURSES);
+  async createCourse(dto: CreateCourseDto, { images }: UploadPictureDto) {
+    try {
+
+    const newImagesUrl = await this.firebaseStorage.uploadFileArray(images, EStireName.COURSES);
     const course = await this.courseModel.create({
       ...dto,
-      picture: pictureUrlPromise,
+      images: newImagesUrl,
     });
 
     return course;
+    } catch (error) {
+      console.log("createCourse error: ", error)
+    }
   }
 
   async deleteCourse(courseId: ObjectId): Promise<Course> {
@@ -55,7 +60,24 @@ export class CoursesService {
     return course;
   }
 
-  // async addGroupToCourse() {}
+  async addGroupToCourse(courseId: ObjectId, groupId: ObjectId) {
+    const course = await this.courseModel.findById(courseId);
 
-  // async deleteGroupFromCourse() {}
+    if(!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND); 
+    }
+
+    course.groups.push(groupId);
+    await course.save();
+
+    return;
+  }
+
+  async deleteGroupFromCourse(courseId: ObjectId, groupId: ObjectId) {
+    await this.courseModel.findByIdAndUpdate(courseId, {
+      $pull: {groups: groupId}
+    });
+
+    return;
+  }
 }

@@ -54,9 +54,13 @@ export class Course {
   } })
   program: IProgram; // or 'details' with program[] inside
 
+  // @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Group' })
+  // groups: mongoose.Schema.Types.ObjectId[]; // переробити на online/offline, ref: 'Group'
+  
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
-  @Prop({ type: String, required: true })
-  groups: mongoose.Schema.Types.ObjectId[]; // переробити на online/offline, ref: 'Group'
+  @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}]})
+  groups: mongoose.Schema.Types.ObjectId[];
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);
