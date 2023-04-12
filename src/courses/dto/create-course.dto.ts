@@ -32,7 +32,7 @@ export class CreateCourseDto {
 
   @ApiProperty({
     example: 5,
-    description: '*Тривалість курсів (к-сть днів)',
+    description: '*Тривалість курсу (к-сть днів)',
   })
   readonly courseDurationDays: number;
 

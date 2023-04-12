@@ -7,6 +7,8 @@ import { CreateCourseDto, SearchCourseDto, UploadPictureDto } from './dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateGroupDto } from 'src/groups/dto';
 import { GroupsService } from 'src/groups/groups.service';
+import { Group } from 'src/db-schemas/group.schema';
+import { GetAllCoursesSchema } from './schema-swagger/getAllCourses.schema';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -16,7 +18,7 @@ export class CoursesController {
 
   // отримати усі курси
   @ApiOperation({ summary: 'Get all Courses online or offline' })
-  @ApiResponse({ status: 200, description: 'Get all courses', type: [Course]})
+  @ApiResponse({ status: 200, description: 'Get all courses', type: [GetAllCoursesSchema]})
   @Get()
   getCourses(@Query() dto: SearchCourseDto) {
     return this.coursesService.getAllCourses();
@@ -35,7 +37,8 @@ export class CoursesController {
   // створити курс
   @ApiOperation({ summary: 'Create course' })
   @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 200, type: Course, description: 'Course created' })
+  @ApiResponse({ status: 201, type: Course, description: 'Course created' })
+  @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 2 }]))
   @Post()
@@ -55,6 +58,7 @@ export class CoursesController {
     return this.coursesService.deleteCourse(courseId);
   }
 
+  @ApiResponse({ status: 201, description: 'Group created', type: Group })
   @Post(':courseId/groups')
   addGroup(@Param('courseId') courseId: ObjectId, 
   @Body() groupDto: CreateGroupDto) {

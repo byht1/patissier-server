@@ -1,50 +1,31 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { ApiProperty } from '@nestjs/swagger';
-import mongoose from 'mongoose';
+import { ApiProperty } from "@nestjs/swagger";
+import mongoose from "mongoose";
+import { EType, IProgram } from "src/db-schemas/course.schema";
+import { Group } from "src/db-schemas/group.schema";
 
-export const enum EType { // переназвати
-  COURSE = 'Курс',
-  MASTER_CLASS = 'Майстер-клас',
-}
-
-export interface IProgram {
-  schedule: string,
-  productsAndInventory: string,
-  additionalBenefits: string,
-}
-
-export type CourseDocument = Course & Document;
-
-@Schema({ versionKey: false, timestamps: true })
-export class Course {
-  @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
+export class GetAllCoursesSchema {
+    @ApiProperty({ example: '64371e7f6bf0ecb4ba9f4247' })
   _id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'Курс' })
   type: EType;
 
   @ApiProperty({ example: 'Торти' })
-  @Prop({ type: String, required: true })
   category: string;
 
   @ApiProperty({ example: 'На курсі ви навчитеся...' })
-  @Prop({ type: String, required: true })
   previewText: string;
   
   @ApiProperty({ example: 12 })
-  @Prop({ type: Number, required: true })
   totalPlaces: number;
 
   @ApiProperty({ example: 5 })
-  @Prop({ type: Number, required: true })
   courseDurationDays: number;
 
   @ApiProperty({ example: 'Програма навчання розрахована для кондитерів-початківців...' })
-  @Prop({ type: String, required: true })
   description: string;
 
-  @ApiProperty({ example: ['image url'] })
-  @Prop({ type: [String], required: true }) // here
+  @ApiProperty({ example: ['images url'] })
   images: string[];
 
   @ApiProperty({ example: {
@@ -53,10 +34,22 @@ export class Course {
     additionalBenefits: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте"
   } })
   program: IProgram; // or 'details' with program[] inside
-  
-  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
-  @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}]})
-  groups: mongoose.Schema.Types.ObjectId[];
-}
 
-export const CourseSchema = SchemaFactory.createForClass(Course);
+  @ApiProperty({ example: [{
+    _id: '64372d14dc718e6f6fc04350',
+    type: 'online',
+    course: '64371e7f6bf0ecb4ba9f4247',
+    days: {
+        start: '07.09.2023',
+        end: '11.09.2023'
+    },
+    time: {
+        from: '10:00',
+        to: '14:00'
+    },
+    price: 2000,
+    clientIds: ['6373c0bca5a6e4c9556f1e7a'],
+    video: 'video url',
+  }] })
+  groups: Group[];
+}

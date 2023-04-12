@@ -15,18 +15,20 @@ export class CoursesService {
   async getAllCourses() {
     const courseList = this.courseModel
       .find()
-      .sort({'createdAt': -1})
+      .populate({
+        path: 'groups',
+        options: { sort: { 'days.start': -1 }, limit: 1 }
+      })
     
     const totalCourses = this.courseModel.countDocuments();
 
     const [total, courses] = await Promise.all([totalCourses, courseList])
-    // console.log("res:", total, "/", courses)
       
     return { total, courses };
   }
 
-  async getOneCourse(courseId) {
-    const course = await this.courseModel.findById(courseId);
+  async getOneCourse(courseId: ObjectId) {
+    const course = await this.courseModel.findById(courseId).populate('groups');
 
     if(!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
@@ -52,10 +54,13 @@ export class CoursesService {
 
   async deleteCourse(courseId: ObjectId): Promise<Course> {
     const course = await this.courseModel.findByIdAndRemove(courseId);
-//  видалити картинки
+
     if(!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
+
+    const deleteImagesPromise = course.images.map(image => this.firebaseStorage.deleteFile(image))
+    await Promise.all(deleteImagesPromise)
 
     return course;
   }

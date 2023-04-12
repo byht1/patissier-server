@@ -9,8 +9,8 @@ import { CoursesService } from 'src/courses/courses.service';
 export class GroupsService {
   constructor(@InjectModel(Group.name) private groupModel: Model<GroupDocument>,
     private coursesService: CoursesService) {}
-    // створити
-  async createGroup(createGroupDto: CreateGroupDto, courseId: ObjectId) {
+    // створити групу
+  async createGroup(createGroupDto: CreateGroupDto, courseId: ObjectId): Promise<Group> {
     const group = await this.groupModel.create({
       ...createGroupDto,
       course: courseId,
@@ -26,19 +26,16 @@ export class GroupsService {
   //   return `This action updates a #${id} group`;
   // }
 
-  // видалити
+  // видалити групу
   async removeGroup(groupId: ObjectId, courseId: ObjectId) {
-    const groupFind = await this.groupModel.findOne({ course: courseId, _id: groupId });
+    const groupFind = await this.groupModel.findOneAndRemove({ course: courseId, _id: groupId });
 
     if(!groupFind) {
       throw new HttpException('Comment not found', HttpStatus.NOT_FOUND);
     }
 
-    const groupPromise = this.groupModel.findByIdAndRemove(groupId).select({ createdAt: 0, updatedAt: 0 });
-    const coursePromise = this.coursesService.deleteGroupFromCourse(courseId, groupId);
+    await this.coursesService.deleteGroupFromCourse(courseId, groupId);
 
-    await Promise.all([groupPromise, coursePromise]);
-
-    return groupPromise;
+    return groupFind;
   }
 }
