@@ -58,16 +58,6 @@ export class AuthService {
     const { login, password } = user;
     const isUser = await this.searchUser(login);
 
-    // isUser = await this.usersService.userByEmail(login);
-
-    // if (!isUser) {
-    //   isUser = await this.usersService.userByUsername(login);
-    // }
-
-    // if (!isUser) {
-    //   throw new HttpException('User does not exist', HttpStatus.UNAUTHORIZED);
-    // }
-
     await this.passwordIsValid(password, isUser.password);
 
     const token = await this.generatorToken(isUser._id);

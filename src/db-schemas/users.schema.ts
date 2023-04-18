@@ -18,6 +18,10 @@ export class Users {
   @Prop({ type: String, required: true, unique: true })
   username: string;
 
+  @ApiProperty({ example: 'ByHt1' })
+  @Prop({ type: String, default: '' })
+  phone: string;
+
   //   @ApiProperty({ example: 'Vitalik1_' })
   @Prop({
     type: String,

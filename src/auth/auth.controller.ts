@@ -33,7 +33,7 @@ export class AuthController {
   })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
-  @Post('/sing-up')
+  @Post('/sign-up')
   signUp(@Body() newUserDto: NewUserDto) {
     return this.authService.signUp(newUserDto);
   }
