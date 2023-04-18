@@ -1,9 +1,9 @@
 import {
   Body,
   Controller,
-  Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
   Req,
@@ -18,7 +18,13 @@ import { ApiBody, ApiConsumes, ApiHeaders, ApiOperation, ApiResponse, ApiTags } 
 import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
 import { ValidatePipe } from 'src/classValidator';
 import { Product } from 'src/db-schemas/product.schema';
-import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from './dto';
+import {
+  CreatePictureDto,
+  CreateProductDto,
+  EActionFavorite,
+  FavoriteQueryDto,
+  GetAllProductsQueryParams,
+} from './dto';
 import { ProductService } from './services/product.service';
 import {
   CategoryRecordsSwaggerSchema,
@@ -74,7 +80,7 @@ export class ProductController {
     return this.storService.countRecordsByCategory();
   }
 
-  @ApiOperation({ summary: 'Add to favorite' })
+  @ApiOperation({ summary: 'Add or delete to favorites' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -87,30 +93,16 @@ export class ProductController {
   @ApiResponse({ status: 404, description: 'Product with ID ${productId} not found' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UseGuards(JwtAuthGuard)
-  @Get('add-favorite/:productId')
-  addFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser) {
+  @Patch('favorite/:productId')
+  deleteFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser, @Query() { action }: FavoriteQueryDto) {
+    if (action === EActionFavorite.DELETE) {
+      return this.productFavoriteService.deleteToFavorite(req.user._id, productId);
+    }
+
     return this.productFavoriteService.addToFavorite(req.user._id, productId);
   }
 
-  @ApiOperation({ summary: 'user to favorite' })
-  @ApiHeaders([
-    {
-      name: 'Authorization',
-      required: true,
-      description: 'User access token.',
-    },
-  ])
-  @ApiResponse({ status: 201, type: Favorite })
-  @ApiResponse({ status: 403, description: 'Invalid token' })
-  @ApiResponse({ status: 404, description: 'Product with ID ${productId} not found' })
-  @ApiResponse({ status: 500, description: 'Server error' })
-  @UseGuards(JwtAuthGuard)
-  @Delete('favorite/:productId')
-  deleteFavorite(@Param('productId') productId: ObjectId, @Req() req: IReqUser) {
-    return this.productFavoriteService.deleteToFavorite(req.user._id, productId);
-  }
-
-  @ApiOperation({ summary: 'User favorite' })
+  @ApiOperation({ summary: 'User favorites' })
   @ApiHeaders([
     {
       name: 'Authorization',
@@ -122,7 +114,7 @@ export class ProductController {
   @ApiResponse({ status: 403, description: 'Invalid token' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UseGuards(JwtAuthGuard)
-  @Get('user-favorite')
+  @Get('favorites')
   userFavorite(@Req() req: IReqUser) {
     return this.productFavoriteService.userToFavorite(req.user._id);
   }

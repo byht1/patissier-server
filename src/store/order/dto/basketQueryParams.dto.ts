@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString, Matches } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Matches } from 'class-validator';
 import {
   errorMessageDto,
   selectProductReg,
@@ -12,6 +12,11 @@ const groupSelect: TValidateRequestFieldsSetting = {
   groupOne: ['pick_field'],
   groupTwo: ['omit_field'],
 };
+
+export enum EActionBasket {
+  ADD = 'add',
+  DELETE = 'delete',
+}
 
 export class BasketQueryParams {
   @ApiProperty({
@@ -41,4 +46,13 @@ export class BasketQueryParams {
   @Matches(selectProductReg.value, { message: selectProductReg.message })
   @IsOptional()
   readonly omit_field?: string;
+
+  @ApiProperty({
+    description: `Вказує на тип операції<br />
+     <b>Доступні поля для вводу:</b> ${Object.values(EActionBasket).join(', ')}<br />`,
+    default: EActionBasket.ADD,
+  })
+  @IsString({ message: errorMessageDto.notString })
+  @IsEnum(EActionBasket, { message: `Повинне мати одне із значень ${Object.values(EActionBasket).join(', ')}` })
+  readonly action: EActionBasket;
 }
