@@ -33,6 +33,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "date-and-time": "^2.4.3",
+    "dotenv": "^16.0.3",
     "firebase": "^9.17.2",
     "mongoose": "^6.6.5",
     "nodemailer": "^6.8.0",

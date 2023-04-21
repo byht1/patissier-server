@@ -1,4 +1,7 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 const {
   FIREBASE_API_KEY,
