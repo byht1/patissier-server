@@ -1,14 +1,15 @@
-import { Controller, Post, Get, Query, Body, Param, Delete, UploadedFiles, UseInterceptors } from '@nestjs/common';
+import { Controller, Post, Get, Query, Body, Param, Delete, UploadedFiles, UseInterceptors, UsePipes } from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Course } from 'src/db-schemas/course.schema';
 import { CoursesService } from './courses.service';
 import { ObjectId } from 'mongoose';
-import { CreateCourseDto, SearchCourseDto, UploadPictureDto } from './dto';
+import { CreateCourseDto, SearchDto, UploadPictureDto } from './dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateGroupDto } from 'src/groups/dto';
 import { GroupsService } from 'src/groups/groups.service';
 import { Group } from 'src/db-schemas/group.schema';
 import { GetAllCoursesSchema } from './schema-swagger/getAllCourses.schema';
+import { ValidateIsNotVoid, ValidatePipe } from 'src/classValidator';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -19,9 +20,10 @@ export class CoursesController {
   // отримати усі курси
   @ApiOperation({ summary: 'Get all Courses online or offline' })
   @ApiResponse({ status: 200, description: 'Get all courses', type: [GetAllCoursesSchema]})
+  @ApiResponse({ status: 500, description: 'Server error' })
   @Get()
-  getCourses(@Query() dto: SearchCourseDto) {
-    return this.coursesService.getAllCourses();
+  getCourses(@Query() searchDto: SearchDto) {
+    return this.coursesService.getAllCourses(searchDto);
   }
 
   // отримати курс по Id
@@ -40,6 +42,8 @@ export class CoursesController {
   @ApiResponse({ status: 201, type: Course, description: 'Course created' })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
+  @UsePipes(ValidatePipe)
+  @UsePipes(ValidateIsNotVoid)
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 2 }]))
   @Post()
   createCourse(@Body() dto: CreateCourseDto, @UploadedFiles() files: UploadPictureDto) {
@@ -59,12 +63,17 @@ export class CoursesController {
   }
 
   @ApiResponse({ status: 201, description: 'Group created', type: Group })
+  @ApiResponse({ status: 400, description: 'Invalid data' })
+  @ApiResponse({ status: 500, description: 'Server error' })
   @Post(':courseId/groups')
   addGroup(@Param('courseId') courseId: ObjectId, 
   @Body() groupDto: CreateGroupDto) {
     return this.groupService.createGroup(groupDto, courseId)
   }
 
+  @ApiResponse({ status: 200, description: 'Group deleted', type: Group })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: 500, description: 'Server error' })
   @Delete(':courseId/groups/:groupId')
   deleteGroup(@Param('courseId') courseId: ObjectId, 
   @Param('groupId') groupId: ObjectId) {

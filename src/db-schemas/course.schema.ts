@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
-export const enum EType { // переназвати
+export enum EType { // переназвати
   COURSE = 'Курс',
   MASTER_CLASS = 'Майстер-клас',
 }
@@ -21,6 +21,7 @@ export class Course {
   _id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'Курс' })
+  @Prop({ type: String, enum: Object.values(EType), required: true }) // here
   type: EType;
 
   @ApiProperty({ example: 'Торти' })

@@ -1,20 +1,28 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
+import { EType } from 'src/db-schemas/course.schema';
 
-export class SearchCourseDto {
+export class SearchDto {
   @ApiProperty({
-    example: 'true',
-    description: 'String for search Course by online offline',
+    example: 'course',
+    description: '',
     required: false,
   })
   @IsString({ message: 'Should be text' })
-  readonly online?: string;
-  
+  readonly type?: EType;
+
+  @ApiProperty({ description: 'Course quantity per page', example: '3', required: false })
+  readonly count?: number;
+
+  @ApiProperty({ description: 'Quantity of skipped courses for the request', example: '0', required: false })
+  @IsOptional()
+  readonly offset?: number;
+
   // @ApiProperty({
-  //   example: 'all',
-  //   description: 'String for search Course by category',
+  //   example: 'offline',
+  //   description: 'String for search Course by online or offline format',
   //   required: false,
   // })
-  // @IsString({ message: 'Should be text' })
-  // readonly category?: string;
+  // readonly format?: ;
+
 }

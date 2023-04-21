@@ -7,7 +7,7 @@ import { ICourseDays, ICourseTime } from "src/db-schemas/group.schema";
 export class CreateGroupDto {
     @ApiProperty({
         example: "online",
-        description: '*Тип курсу', 
+        description: 'Формат курсу', 
     })
     readonly type: "online" | "offline";
 
