@@ -8,12 +8,13 @@ import { CoursesService } from 'src/courses/courses.service';
 @Injectable()
 export class GroupsService {
   constructor(@InjectModel(Group.name) private groupModel: Model<GroupDocument>,
-    private coursesService: CoursesService) {}
+    private coursesService: CoursesService,
+    ) {}
     // створити групу
   async createGroup(createGroupDto: CreateGroupDto, courseId: ObjectId): Promise<Group> {
     const group = await this.groupModel.create({
       ...createGroupDto,
-      course: courseId,
+      courseId,
     })
 
     await this.coursesService.addGroupToCourse(courseId, group._id)
@@ -38,4 +39,9 @@ export class GroupsService {
 
     return groupFind;
   }
+
+  // async removeAllCourseGroups(courseId: ObjectId) {
+  //   await this.groupModel.deleteMany({courseId: courseId});
+  //   return;
+  // }
 }

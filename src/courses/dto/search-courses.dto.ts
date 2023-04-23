@@ -2,21 +2,21 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 import { EType } from 'src/db-schemas/course.schema';
 
-export class SearchDto {
+export class SearchCoursesDto {
   @ApiProperty({
-    example: 'course',
-    description: '',
+    example: 'Курс',
+    description: '\'type\' може мати тільки одне із двох значень: \'Курс\' або \'Майстер-клас\'',
     required: false,
   })
   @IsString({ message: 'Should be text' })
   readonly type?: EType;
 
-  @ApiProperty({ description: 'Course quantity per page', example: '3', required: false })
+  @ApiProperty({ description: 'Кількість курсів на один запит', example: '3', required: false })
   readonly count?: number;
 
-  @ApiProperty({ description: 'Quantity of skipped courses for the request', example: '0', required: false })
+  @ApiProperty({ description: 'Кількість пропущених курсів за запитом', example: '0', required: false })
   @IsOptional()
-  readonly offset?: number;
+  readonly skip?: number;
 
   // @ApiProperty({
   //   example: 'offline',

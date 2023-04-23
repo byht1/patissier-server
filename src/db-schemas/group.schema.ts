@@ -8,6 +8,12 @@ import { Course } from './course.schema';
 //     start: string; // 07 грудня, 2022 // yyyy-mm-dd
 //     end: string; // 11 грудня, 2022
 // }
+
+export enum ECourseFormat { // переназвати
+  ONLINE = 'online',
+  OFFLINE = 'offline',
+}
+
 export interface ICourseDays {
     start: string; // 07 грудня, 2022 // yyyy-mm-dd
     end: string; // 11 грудня, 2022
@@ -25,12 +31,12 @@ export class Group {
     @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
     _id: mongoose.Schema.Types.ObjectId;
 
-    // type: string; // (online or offline), maybe another name
-    type: "online" | "offline";
+    @Prop({ type: String, enum: Object.values(ECourseFormat),required: true })
+    format: ECourseFormat;
 
     @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true })
-    course: Course;
+    courseId: Course;
 
     @ApiProperty({ example: {
         start: '07.09.2023',
@@ -57,7 +63,7 @@ export class Group {
     price: number;
 
     @ApiProperty({example: ['6373c0bca5a6e4c9556f1e7a']})
-    @Prop({ type: mongoose.Schema.Types.ObjectId })
+    @Prop({ type: [{type: mongoose.Schema.Types.ObjectId}] })
     clientIds: [mongoose.Schema.Types.ObjectId];
 
     video: string; // url

@@ -3,7 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Course, CourseDocument } from 'src/db-schemas/course.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
-import { CreateCourseDto, SearchDto, UploadPictureDto } from './dto';
+import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
+import { SearchGroupsDto } from 'src/groups/dto';
 
 @Injectable()
 export class CoursesService {
@@ -12,30 +13,30 @@ export class CoursesService {
     private firebaseStorage: FirebaseStorageManager,
   ) {}
 
-  async getAllCourses(dto: SearchDto) {
-    const { type = null, count = 3, offset = 0 } = dto;
+  async getAllCourses(dto: SearchCoursesDto) {
+    const { type = null, count = 3, skip = 0 } = dto;
     const filteredCourses = (type: string) => {
       switch (type) {
         case null:
           return null;
           // break;
         case "Курс":
-          console.log(2)
+          // console.log(2)
           return { type: "Курс" };
           // break;
         case "Майстер-клас":
-          console.log(3)
+          // console.log(3)
           return { type: "Майстер-клас" }; // master-class
           // break;
         default:
           return;
       }
     }
-    console.log("my sign")
+    // console.log("my sign")
 
     const courseList = this.courseModel
       .find(filteredCourses(type))
-      .skip(offset)
+      .skip(skip)
       .limit(count)
       .populate({
         path: 'groups',
@@ -49,8 +50,16 @@ export class CoursesService {
     return { total, data };
   }
 
-  async getOneCourse(courseId: ObjectId) {
-    const course = await this.courseModel.findById(courseId).populate('groups');
+  async getOneCourse(courseId: ObjectId, searchFormatDto: SearchGroupsDto) {
+    // const { format = 'online'} = searchFormatDto;
+    // const course = await this.courseModel.findById(courseId).populate('groups');
+    const course = await this.courseModel
+    .findById(courseId)
+    .populate({
+      path: 'groups',
+      // match: {format: format},
+      // options: {limit: 1, select: '-createdAt -updatedAt'},
+    });
 
     if(!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
@@ -81,8 +90,9 @@ export class CoursesService {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    const deleteImagesPromise = course.images.map(image => this.firebaseStorage.deleteFile(image))
-    await Promise.all(deleteImagesPromise)
+    // const deleteGroupsPromise = this.groupsService.removeAllCourseGroups(courseId)
+    const deleteImagesPromise = course.images.map(image => this.firebaseStorage.deleteFile(image));
+    await Promise.all([deleteImagesPromise])
 
     return course;
   }
