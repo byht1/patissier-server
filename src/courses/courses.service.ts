@@ -5,12 +5,14 @@ import { Course, CourseDocument } from 'src/db-schemas/course.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
 import { SearchGroupsDto } from 'src/groups/dto';
+import { GroupsService } from 'src/groups/groups.service';
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectModel(Course.name) private courseModel: Model<CourseDocument>,
     private firebaseStorage: FirebaseStorageManager,
+    private groupsService: GroupsService,
   ) {}
 
   async getAllCourses(dto: SearchCoursesDto) {
@@ -90,9 +92,10 @@ export class CoursesService {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    // const deleteGroupsPromise = this.groupsService.removeAllCourseGroups(courseId)
+    const deleteGroupsPromise = this.groupsService.removeAllCourseGroups(courseId)
     const deleteImagesPromise = course.images.map(image => this.firebaseStorage.deleteFile(image));
-    await Promise.all([deleteImagesPromise])
+    
+    await Promise.all([deleteGroupsPromise, deleteImagesPromise])
 
     return course;
   }

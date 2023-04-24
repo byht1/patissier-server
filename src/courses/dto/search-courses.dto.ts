@@ -1,15 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { EType } from 'src/db-schemas/course.schema';
+// import { EType } from 'src/db-schemas/courses.schema';
 
 export class SearchCoursesDto {
   @ApiProperty({
     example: 'Курс',
-    description: '\'type\' може мати тільки одне із двох значень: \'Курс\' або \'Майстер-клас\'',
+    description: '\'type\' може мати тільки одне із двох значень: \'курс\' або \'майстер-клас\'',
     required: false,
   })
   @IsString({ message: 'Should be text' })
-  readonly type?: EType;
+  readonly type?: '';
 
   @ApiProperty({ description: 'Кількість курсів на один запит', example: '3', required: false })
   readonly count?: number;

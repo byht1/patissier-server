@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
 import { CreateGroupDto, UpdateGroupDto } from './dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Group, GroupDocument } from 'src/db-schemas/group.schema';
@@ -8,8 +8,9 @@ import { CoursesService } from 'src/courses/courses.service';
 @Injectable()
 export class GroupsService {
   constructor(@InjectModel(Group.name) private groupModel: Model<GroupDocument>,
+    @Inject(forwardRef(() => CoursesService))  
     private coursesService: CoursesService,
-    ) {}
+  ) {}
     // створити групу
   async createGroup(createGroupDto: CreateGroupDto, courseId: ObjectId): Promise<Group> {
     const group = await this.groupModel.create({
@@ -40,8 +41,8 @@ export class GroupsService {
     return groupFind;
   }
 
-  // async removeAllCourseGroups(courseId: ObjectId) {
-  //   await this.groupModel.deleteMany({courseId: courseId});
-  //   return;
-  // }
+  async removeAllCourseGroups(courseId: ObjectId) {
+    await this.groupModel.deleteMany({courseId: courseId});
+    return;
+  }
 }
