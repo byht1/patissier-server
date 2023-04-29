@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import mongoose from "mongoose";
-import { EType, IProgram } from "src/db-schemas/course.schema";
+import { ECourseType, ICourseDetails } from "src/db-schemas/course.schema";
 import { Group } from "src/db-schemas/group.schema";
 
 export class GetAllCoursesSchema {
@@ -8,7 +8,7 @@ export class GetAllCoursesSchema {
   _id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'Курс' })
-  type: EType;
+  type: ECourseType;
 
   @ApiProperty({ example: 'Торти' })
   category: string;
@@ -33,7 +33,7 @@ export class GetAllCoursesSchema {
     productsAndInventory: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти",
     additionalBenefits: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте"
   } })
-  program: IProgram; // or 'details' with program[] inside
+  program: ICourseDetails; // or 'details' with program[] inside
 
   @ApiProperty({ example: [{
     _id: '64372d14dc718e6f6fc04350',

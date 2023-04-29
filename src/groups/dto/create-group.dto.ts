@@ -1,5 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsEnum, IsNotEmpty, IsNumber, IsNumberString, Matches } from "class-validator";
+import { IsEnum, IsNotEmpty, IsNumber, Matches } from "class-validator";
 import { ObjectId } from "mongoose";
 import { ECourseFormat, ICourseDays, ICourseTime } from "src/db-schemas/group.schema";
 

@@ -2,15 +2,32 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
-export enum EType { // переназвати
+export enum ECourseType { // переназвати
   COURSE = 'Курс',
   MASTER_CLASS = 'Майстер-клас',
 }
 
-export interface IProgram {
+type StringObject = {
+  [key: string]: string;
+}
+
+// let programEx: [StringObject, StringObject, StringObject]
+
+type ProgramObject = {
+  part1: StringObject;
+  part2: StringObject;
+  part3: StringObject;
+};
+
+export interface ICourseDetails {
   schedule: string,
   productsAndInventory: string,
   additionalBenefits: string,
+  program: ProgramObject
+  // program: {
+  //   theory: "",
+  //   bonus: "",
+  // }
 }
 
 export type CourseDocument = Course & Document;
@@ -21,8 +38,8 @@ export class Course {
   _id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'Курс' })
-  @Prop({ type: String, enum: Object.values(EType), required: true }) // here
-  type: EType;
+  @Prop({ type: String, enum: Object.values(ECourseType), required: true }) // here
+  type: ECourseType;
 
   @ApiProperty({ example: 'Торти' })
   @Prop({ type: String, required: true })
@@ -51,9 +68,19 @@ export class Course {
   @ApiProperty({ example: {
     schedule: "Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування",
     productsAndInventory: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти",
-    additionalBenefits: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте"
+    additionalBenefits: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте",
+    // program: [
+    //   {"Теорія": "Класичний рецепт випічки та глінтвейну"},
+    //   {"Бонус": "за проходження майстер-класу"},
+    //   {"Онлайн": "Всі відео-уроки в записі"}
+    // ]
+    program: {
+      "Теорія": "Класичний рецепт випічки та глінтвейну",
+      "Бонус": "за проходження майстер-класу",
+      "Онлайн": "Всі відео-уроки в записі"
+    }
   } })
-  program: IProgram; // or 'details' with program[] inside
+  details: ICourseDetails; // or 'details' with program[] inside
   
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}]})
