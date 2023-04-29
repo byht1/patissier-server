@@ -13,21 +13,16 @@ type StringObject = {
 
 // let programEx: [StringObject, StringObject, StringObject]
 
-type ProgramObject = {
-  part1: StringObject;
-  part2: StringObject;
-  part3: StringObject;
-};
+export interface DetailsObject {
+  details_1: StringObject;
+  details_2: StringObject;
+  details_3: StringObject;
+}
 
-export interface ICourseDetails {
-  schedule: string,
-  productsAndInventory: string,
-  additionalBenefits: string,
-  program: ProgramObject
-  // program: {
-  //   theory: "",
-  //   bonus: "",
-  // }
+export interface ProgramObject {
+  program_1: StringObject;
+  program_2: StringObject;
+  program_3: StringObject;
 }
 
 export type CourseDocument = Course & Document;
@@ -65,22 +60,29 @@ export class Course {
   @Prop({ type: [String], required: true }) // here
   images: string[];
 
-  @ApiProperty({ example: {
-    schedule: "Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування",
-    productsAndInventory: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти",
-    additionalBenefits: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте",
-    // program: [
-    //   {"Теорія": "Класичний рецепт випічки та глінтвейну"},
-    //   {"Бонус": "за проходження майстер-класу"},
-    //   {"Онлайн": "Всі відео-уроки в записі"}
-    // ]
-    program: {
-      "Теорія": "Класичний рецепт випічки та глінтвейну",
-      "Бонус": "за проходження майстер-класу",
-      "Онлайн": "Всі відео-уроки в записі"
+  @ApiProperty({
+    example: {
+      description: {
+        description_1: { name: "5 днів практики", description: "Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування" },
+        description_2: { name: "Продукти та інвентар", description: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти" },
+        description_3: { name: "Додаткові переваги", description: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте" },
+      }
     }
-  } })
-  details: ICourseDetails; // or 'details' with program[] inside
+  })
+  @Prop({ type: Object, required: true }) // here
+  details: DetailsObject;
+
+  @ApiProperty({
+    example: {
+      program: {
+        program_1: { name: "Теорія", description: "Класичний рецепт випічки та глінтвейну" },
+        program_2: { name: "Бонус", description: "за проходження майстер-класу" },
+        program_3: { name: "Онлайн", description: "Всі відео-уроки в записі" },
+      }
+    }
+  })
+  @Prop({ type: Object, required: true }) // here
+  program: ProgramObject;
   
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}]})

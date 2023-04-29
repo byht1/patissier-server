@@ -49,9 +49,7 @@ export class CoursesController {
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 2 }]))
   @Post()
   createCourse(@Body() dto: CreateCourseDto, @UploadedFiles() files: UploadPictureDto) {
-    // console.log("files:", files)
     return this.coursesService.createCourse(dto, files);
-    // return;
   }
 
   // видалити курс і усе, що з ним пов'язано

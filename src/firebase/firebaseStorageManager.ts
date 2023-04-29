@@ -18,23 +18,31 @@ export class FirebaseStorageManager extends Firebase {
   }
 
   async uploadFileArray(files: Express.Multer.File[], dir: EStireName): Promise<string[]> {
-    const urlListPromise = files.map(async file => this.uploadFile(file, dir));
+    // try {
+      const urlListPromise = files.map(async file => this.uploadFile(file, dir));
 
-    return await Promise.all(urlListPromise);
+      return await Promise.all(urlListPromise);
+    // } catch (error) {
+    //   console.log("🚀 uploadFileArray ~ error:", error)
+    // }
   }
 
   async uploadFile(file: Express.Multer.File, dir: EStireName): Promise<string> {
-    const typeFile = file.originalname.split('.').pop();
-    const fileBuffer = file.buffer;
-    const fileName = `${dir}/${uuidv4()}.${typeFile}`;
-    const storageRef = ref(this.storage, fileName);
-    const metadata = {
-      contentType: file.mimetype,
-    };
+    // try {
+      const typeFile = file.originalname.split('.').pop();
+      const fileBuffer = file.buffer;
+      const fileName = `${dir}/${uuidv4()}.${typeFile}`;
+      const storageRef = ref(this.storage, fileName);
+      const metadata = {
+        contentType: file.mimetype,
+      };
 
-    await uploadBytes(storageRef, fileBuffer, metadata);
-    const downloadURL = await getDownloadURL(storageRef);
-    return downloadURL;
+      await uploadBytes(storageRef, fileBuffer, metadata);
+      const downloadURL = await getDownloadURL(storageRef);
+      return downloadURL;
+    // } catch (error) {
+    //   console.log("🚀 ~ file: ~ uploadFile ~ error:", error)
+    // }
   }
 
   public deleteFile = async (url: string): Promise<void> => {

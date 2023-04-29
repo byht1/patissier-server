@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumberString, IsString, Matches, MaxLength } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumberString, IsString, Matches } from 'class-validator';
 import { errorMessageDto } from 'src/classValidator';
 import { ECourseType } from 'src/db-schemas/course.schema';
 import { fieldsValid } from '../helpers/validation';
@@ -20,6 +20,7 @@ export class CreateCourseDto {
   })
   @Matches(fieldsValid.allowedCharacters.value, { message: fieldsValid.allowedCharacters.message })
   @Matches(/^\s*\S/, { message: 'category should not be empty' })
+  @IsString({ message: errorMessageDto.notString })
   readonly category: string;
 
   @ApiProperty({
@@ -52,39 +53,49 @@ export class CreateCourseDto {
   @Matches(/^\s*\S/, { message: 'description should not be empty' })
   readonly description: string;
 
-  // details fields:
+// //////////////////////////////////////////////////////////
+  // ------------------------- details fields(3):
+
   @ApiProperty({
     example: 'Кожного дня нова тематика й практичне відпрацювання теорії в процесі приготування',
-    description: 'Опис розпорядку курсу',
+    description: 'Опис details_1: сериалізований об\'єкт з полями "name" та "description"',
   })
-  @MaxLength(140, {message: errorMessageDto.maxLength(140)})
-  @Matches(fieldsValid.allowedCharacters.value, { message: fieldsValid.allowedCharacters.message })
-  @Matches(/^\s*\S/, { message: 'detailsSchedule should not be empty' })
-  readonly detailsSchedule: string;
+  @Matches(/^\s*\S/, { message: 'details_1 should not be empty' })
+  readonly details_1: string;
 
   @ApiProperty({
-    example: 'Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти',
-    description: 'Опис продуктів та інвентаря',
+    // example: 'Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти',
+    description: 'Опис details_2: сериалізований об\'єкт з полями "name" та "description"',
   })
-  @MaxLength(140, {message: errorMessageDto.maxLength(140)})
-  @Matches(fieldsValid.allowedCharacters.value, { message: fieldsValid.allowedCharacters.message })
-  @Matches(/^\s*\S/, { message: 'detailsProductsAndInventory should not be empty' })
-  readonly detailsProductsAndInventory: string;
+  @Matches(/^\s*\S/, { message: 'details_2 should not be empty' })
+  readonly details_2: string;
 
   @ApiProperty({
-    example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
-    description: 'Перелік додаткових переваг',
+    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
+    description: 'Опис details_3: сериалізований об\'єкт з полями "name" та "description"',
   })
-  @MaxLength(140, {message: errorMessageDto.maxLength(140)})
-  @Matches(fieldsValid.allowedCharacters.value, { message: fieldsValid.allowedCharacters.message })
-  @Matches(/^\s*\S/, { message: 'detailsAdditionalBenefits should not be empty' })
-  readonly detailsAdditionalBenefits: string;
+  @Matches(/^\s*\S/, { message: 'details_3 should not be empty' })
+  readonly details_3: string;
 
-  // Теорія: 
-  // Класичний рецепт випічки та глінтвейну
-  // Бонус: 
-  // за проходження майстер-класу
-  // Онлайн: 
-  // Всі відео-уроки в записі
+  // ------------------------- program fields(3):
+  @ApiProperty({
+    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
+    description: 'Опис program_1: сериалізований об\'єкт з полями "name" та "description"',
+  })
+  @Matches(/^\s*\S/, { message: 'program_1 should not be empty' })
+  readonly program_1: string;
 
+  @ApiProperty({
+    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
+    description: 'Опис program_2: сериалізований об\'єкт з полями "name" та "description"',
+  })
+  @Matches(/^\s*\S/, { message: 'program_2 should not be empty' })
+  readonly program_2: string;
+
+  @ApiProperty({
+    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
+    description: 'Опис program_3: сериалізований об\'єкт з полями "name" та "description"',
+  })
+  @Matches(/^\s*\S/, { message: 'program_3 should not be empty' })
+  readonly program_3: string;
 }
