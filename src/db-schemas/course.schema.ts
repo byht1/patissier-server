@@ -2,7 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
-export enum ECourseType { // переназвати
+export enum ECourseType {
   COURSE = 'Курс',
   MASTER_CLASS = 'Майстер-клас',
 }
@@ -10,8 +10,6 @@ export enum ECourseType { // переназвати
 type StringObject = {
   [key: string]: string;
 }
-
-// let programEx: [StringObject, StringObject, StringObject]
 
 export interface DetailsObject {
   details_1: StringObject;
@@ -62,11 +60,9 @@ export class Course {
 
   @ApiProperty({
     example: {
-      description: {
-        description_1: { name: "5 днів практики", description: "Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування" },
-        description_2: { name: "Продукти та інвентар", description: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти" },
-        description_3: { name: "Додаткові переваги", description: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте" },
-      }
+      details_1: { name: "5 днів практики", description: "Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування" },
+      details_2: { name: "Продукти та інвентар", description: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти" },
+      details_3: { name: "Додаткові переваги", description: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте" },
     }
   })
   @Prop({ type: Object, required: true }) // here
@@ -74,11 +70,9 @@ export class Course {
 
   @ApiProperty({
     example: {
-      program: {
-        program_1: { name: "Теорія", description: "Класичний рецепт випічки та глінтвейну" },
-        program_2: { name: "Бонус", description: "за проходження майстер-класу" },
-        program_3: { name: "Онлайн", description: "Всі відео-уроки в записі" },
-      }
+      program_1: { name: "Теорія", description: "Класичний рецепт випічки та глінтвейну" },
+      program_2: { name: "Бонус", description: "за проходження майстер-класу" },
+      program_3: { name: "Онлайн", description: "Всі відео-уроки в записі" },
     }
   })
   @Prop({ type: Object, required: true }) // here
