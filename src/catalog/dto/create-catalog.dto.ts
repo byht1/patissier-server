@@ -24,7 +24,7 @@ export class CreateCatalogDto {
   readonly price: number;
 
   @ApiProperty({
-    example: 'Ніжний заварний крем та зрусткк печиво...',
+    example: 'Ніжний заварний крем та хрусткий печиво...',
     description: 'description',
   })
   @IsString({ message: 'Should be text' })

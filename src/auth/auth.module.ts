@@ -1,4 +1,4 @@
-import { UsersService } from './../users/users.service';
+import { UsersService } from '../users/services/users.service';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';

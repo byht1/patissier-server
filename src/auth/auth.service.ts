@@ -9,7 +9,7 @@ import { Users, UsersDocument } from 'src/db-schemas/users.schema';
 import { TNewUser } from './type';
 import { EmailMessageService } from 'src/email-message/email-message.service';
 import { LogInDto, NewPasswordDto, NewUserDto } from './dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/services/users.service';
 
 // 401 Access allowed only for registered users. доступ тільки для зареєстрованих
 
@@ -57,16 +57,6 @@ export class AuthService {
   async logIn(user: LogInDto): Promise<TNewUser> {
     const { login, password } = user;
     const isUser = await this.searchUser(login);
-
-    // isUser = await this.usersService.userByEmail(login);
-
-    // if (!isUser) {
-    //   isUser = await this.usersService.userByUsername(login);
-    // }
-
-    // if (!isUser) {
-    //   throw new HttpException('User does not exist', HttpStatus.UNAUTHORIZED);
-    // }
 
     await this.passwordIsValid(password, isUser.password);
 
@@ -157,10 +147,7 @@ export class AuthService {
     return;
   }
 
-  async forgottenPasswordNew(
-    newPassword: string,
-    linkId: string,
-  ): Promise<void> {
+  async forgottenPasswordNew(newPassword: string, linkId: string): Promise<void> {
     const isUser = await this.forgottenPasswordUserSearch(linkId);
 
     const hashPassword = await this.bcryptPassword(newPassword);
@@ -174,9 +161,7 @@ export class AuthService {
     return;
   }
 
-  private async forgottenPasswordUserSearch(
-    forgottenPasswordToken: string,
-  ): Promise<UsersDocument> {
+  private async forgottenPasswordUserSearch(forgottenPasswordToken: string): Promise<UsersDocument> {
     const isUser = await this.usersModel.findOne({
       forgottenPasswordToken,
     });

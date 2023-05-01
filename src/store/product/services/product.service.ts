@@ -2,12 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId, SortOrder } from 'mongoose';
 import { Product, ECategory, StorColumnName, ProductDocument } from 'src/db-schemas/product.schema';
-import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from './dto';
+import { CreatePictureDto, CreateProductDto, GetAllProductsQueryParams } from '../dto';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
-import { ETypeSortProducts } from './type';
+import { ETypeSortProducts } from '../type';
 import { ObjectSortOrder, TRegSearch } from 'src/type';
 import { queryRegexGenerator } from 'src/store/product/helpers';
-import { selectFieldFromDb } from 'src/helpers';
+import { selectField, selectFieldFromDb } from 'src/helpers';
 
 //;
 
@@ -40,7 +40,7 @@ export class ProductService {
   async getAllProducts(searchParams: GetAllProductsQueryParams) {
     const {
       page = '1',
-      limit = '9',
+      limit = '3',
       sort,
       category,
       search,
@@ -52,20 +52,17 @@ export class ProductService {
 
     const findSort = this.findSortedProducts(sort);
     const paramsQuery = queryRegexGenerator([category, search], ['category', searchInput]);
-    const select = this.selectField({ pick_field, omit_field });
+    const select = selectField({ pick_field, omit_field });
 
     const query: Record<string, TRegSearch | string[]> = { ...paramsQuery };
     if (id) {
       query['_id'] = id.split(',');
     }
 
-    const productsListPromise = this.productModel
-      .find(query)
-      .skip((+page - 1) * +limit)
-      .limit(+limit)
-      .sort(findSort)
-      .select(select);
-    const totalProductPromise = this.productModel.countDocuments().exec();
+    const skip = (+page - 1) * +limit;
+
+    const productsListPromise = this.productModel.find(query).select(select).skip(skip).limit(+limit).sort(findSort);
+    const totalProductPromise = this.productModel.countDocuments(query).exec();
     const [productsList, totalProduct] = await Promise.all([productsListPromise, totalProductPromise]);
 
     if (id) {
@@ -127,21 +124,6 @@ export class ProductService {
     await Promise.all(update);
 
     return productsListUpdate;
-  }
-
-  private selectField(select: Record<string, string>): Record<string, number> {
-    const selectKey = Object.keys(select);
-    const selectValue = Object.values(select);
-
-    return selectValue.reduce((acc, x, i) => {
-      if (!x) return acc;
-
-      const value = x.split(',') as StorColumnName[];
-      const pickOrOmit = selectKey[i] === 'pick_field' ? 1 : 0;
-      acc = { ...acc, ...selectFieldFromDb(value, pickOrOmit) };
-
-      return acc;
-    }, {});
   }
 
   private findSortedProducts(sortType: string | undefined): ObjectSortOrder {

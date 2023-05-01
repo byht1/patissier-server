@@ -4,7 +4,7 @@ import { Model, ObjectId } from 'mongoose';
 import { Course, CourseDocument } from 'src/db-schemas/course.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
-import { SearchGroupsDto } from 'src/groups/dto';
+// import { SearchGroupsDto } from 'src/groups/dto';
 import { GroupsService } from 'src/groups/groups.service';
 
 @Injectable()
