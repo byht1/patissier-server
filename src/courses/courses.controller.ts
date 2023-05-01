@@ -5,7 +5,7 @@ import { CoursesService } from './courses.service';
 import { ObjectId } from 'mongoose';
 import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
-import { CreateGroupDto, SearchGroupsDto } from 'src/groups/dto';
+import { CreateGroupDto } from 'src/groups/dto';
 import { GroupsService } from 'src/groups/groups.service';
 import { Group } from 'src/db-schemas/group.schema';
 import { GetAllCoursesSchema } from './schema-swagger/getAllCourses.schema';
@@ -35,9 +35,8 @@ export class CoursesController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @Get(':courseId')
-  getOneCourse(@Param('courseId') courseId: ObjectId,
-    @Query() searchDto: SearchGroupsDto) {
-    return this.coursesService.getOneCourse(courseId, searchDto);
+  getOneCourse(@Param('courseId') courseId: ObjectId) {
+    return this.coursesService.getOneCourse(courseId);
   }
 
   // створити курс

@@ -1,9 +1,9 @@
-import { PipeTransform, Injectable, ArgumentMetadata } from '@nestjs/common';
+import { PipeTransform, Injectable } from '@nestjs/common';
 import { ValidationException } from '../exceptions/validation.exception';
 
 @Injectable()
 export class CourseValidationPipe implements PipeTransform {
-  transform(value: any, metadata: ArgumentMetadata) {
+  transform(value: any) {
     const detailsField = value.details;
     const programField = value.program;
       

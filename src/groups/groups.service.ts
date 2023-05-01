@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Inject, Injectable, forwardRef } from '@nestjs/common';
-import { CreateGroupDto, UpdateGroupDto } from './dto';
+import { CreateGroupDto } from './dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Group, GroupDocument } from 'src/db-schemas/group.schema';
 import { Model, ObjectId } from 'mongoose';

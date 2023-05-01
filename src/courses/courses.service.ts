@@ -49,7 +49,8 @@ export class CoursesService {
     return { total, data };
   }
 
-  async getOneCourse(courseId: ObjectId, searchFormatDto: SearchGroupsDto) {
+  // async getOneCourse(courseId: ObjectId, searchFormatDto: SearchGroupsDto) {
+  async getOneCourse(courseId: ObjectId) {
     // const { format = 'online'} = searchFormatDto;
     // const course = await this.courseModel.findById(courseId).populate('groups');
     const course = await this.courseModel
