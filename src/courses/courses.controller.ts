@@ -20,8 +20,9 @@ export class CoursesController {
 
   // отримати усі курси
   @ApiOperation({ summary: 'Get Course List' })
-  @ApiResponse({ status: 200, description: 'Get course list', type: [GetAllCoursesSchema]})
+  @ApiResponse({ status: 200, description: 'Get course list', type: GetAllCoursesSchema})
   @ApiResponse({ status: 500, description: 'Server error' })
+  @UsePipes(ValidatePipe)
   @Get()
   getCourses(@Query() searchDto: SearchCoursesDto) {
     return this.coursesService.getAllCourses(searchDto);

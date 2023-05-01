@@ -1,28 +1,37 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
-// import { EType } from 'src/db-schemas/courses.schema';
+import { IsEnum, IsNumberString, IsOptional, Matches } from 'class-validator';
+
+enum ECourseSearchType {
+  COURSES ='courses',
+  MASTER_CLASS = 'master-classes',
+}
 
 export class SearchCoursesDto {
   @ApiProperty({
-    example: 'Курс',
-    description: '\'type\' може мати тільки одне із двох значень: \'курс\' або \'майстер-клас\'',
+    example: 'courses',
+    description: '\'type\' може мати тільки одне із двох значень: \'courses\' або \'master-classes\'',
     required: false,
   })
-  @IsString({ message: 'Should be text' })
-  readonly type?: '';
+  @IsEnum(ECourseSearchType, { message: 'This query \'type\' does not exist' })
+  @Matches(/^\s*\S/, { message: 'type should not be empty' })
+  @IsOptional()
+  readonly type?: ECourseSearchType;
 
-  @ApiProperty({ description: 'Кількість курсів на один запит', example: '3', required: false })
+  @ApiProperty({
+    example: '3',
+    description: 'Кількість курсів на один запит',
+    required: false
+  })
+  @IsNumberString({}, { message: 'count must be a number' })
+  @IsOptional()
   readonly count?: number;
 
-  @ApiProperty({ description: 'Кількість пропущених курсів за запитом', example: '0', required: false })
+  @ApiProperty({
+    example: '0',
+    description: 'Кількість пропущених курсів за запитом', //
+    required: false
+  })
+  @IsNumberString({}, { message: 'skip must be a number' })
   @IsOptional()
   readonly skip?: number;
-
-  // @ApiProperty({
-  //   example: 'offline',
-  //   description: 'String for search Course by online or offline format',
-  //   required: false,
-  // })
-  // readonly format?: ;
-
 }

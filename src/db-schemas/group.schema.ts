@@ -4,12 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { Course } from './course.schema';
 
-// export interface ICourseDays {
-//     start: string; // 07 грудня, 2022 // yyyy-mm-dd
-//     end: string; // 11 грудня, 2022
-// }
-
-export enum ECourseFormat { // переназвати
+export enum EGroupFormat {
   ONLINE = 'online',
   OFFLINE = 'offline',
 }
@@ -31,16 +26,16 @@ export class Group {
     @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
     _id: mongoose.Schema.Types.ObjectId;
 
-    @Prop({ type: String, enum: Object.values(ECourseFormat),required: true })
-    format: ECourseFormat;
+    @Prop({ type: String, enum: Object.values(EGroupFormat), required: true })
+    format: EGroupFormat;
 
     @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Course', required: true })
     courseId: Course;
 
     @ApiProperty({ example: {
-        start: '07.09.2023',
-        end: '11.09.2023'
+        start: '2023-09-09',
+        end: '2023-09-18'
     }})
     @Prop({ type: {
         start: String,

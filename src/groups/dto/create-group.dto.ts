@@ -1,16 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsEnum, IsNotEmpty, IsNumber, Matches } from "class-validator";
 import { ObjectId } from "mongoose";
-import { ECourseFormat, ICourseDays, ICourseTime } from "src/db-schemas/group.schema";
-
-//  * - поміняти опис
+import { EGroupFormat, ICourseDays, ICourseTime } from "src/db-schemas/group.schema";
 
 export class CreateGroupDto {
     @ApiProperty({
         example: "online",
         description: 'Формат курсу: \'oline\' або \'offline\'', 
     })
-    @IsEnum(ECourseFormat, { message: 'This format does not exist' })
+    @IsEnum(EGroupFormat, { message: 'This format does not exist' })
     @Matches(/^\s*\S/, { message: 'format should not be empty' })
     readonly format: "online" | "offline";
 
@@ -19,7 +17,7 @@ export class CreateGroupDto {
             start: '2023-09-09',
             end: '2023-09-18'
         },
-        description: '*Дні у форматі yyyy-mm-dd', //
+        description: 'Дата початку й дата завершення у форматі YYYY-MM-DD',
     })
     readonly days: ICourseDays; // перевірка на відповідність к-сті днів відповідно до курсу
 
@@ -28,7 +26,7 @@ export class CreateGroupDto {
             from: '10:00',
             to: '14:00'
         },
-        description: '*Час у форматі hh:mm', //
+        description: 'Час початку й час завершення у форматі HH:MM',
     })
     readonly time: ICourseTime; // перевірка
 

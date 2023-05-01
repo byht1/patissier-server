@@ -7,21 +7,21 @@ export enum ECourseType {
   MASTER_CLASS = 'Майстер-клас',
 }
 
-export type StringObject = {
+export interface INameAndDescrObject {
   name: string;
   description: string;
 }
 
-export interface DetailsObject {
-  details_1: StringObject;
-  details_2: StringObject;
-  details_3: StringObject;
+export interface ICourseDetails {
+  details_1: INameAndDescrObject;
+  details_2: INameAndDescrObject;
+  details_3: INameAndDescrObject;
 }
 
-export interface ProgramObject {
-  program_1: StringObject;
-  program_2: StringObject;
-  program_3: StringObject;
+export interface ICourseProgram {
+  program_1: INameAndDescrObject;
+  program_2: INameAndDescrObject;
+  program_3: INameAndDescrObject;
 }
 
 export type CourseDocument = Course & Document;
@@ -56,7 +56,7 @@ export class Course {
   description: string;
 
   @ApiProperty({ example: ['image url'] })
-  @Prop({ type: [String], required: true }) // here
+  @Prop({ type: [String], required: true })
   images: string[];
 
   @ApiProperty({
@@ -66,8 +66,8 @@ export class Course {
       details_3: { name: "Додаткові переваги", description: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте" },
     }
   })
-  @Prop({ type: Object, required: true }) // here
-  details: DetailsObject;
+  @Prop({ type: Object, required: true })
+  details: ICourseDetails;
 
   @ApiProperty({
     example: {
@@ -76,8 +76,8 @@ export class Course {
       program_3: { name: "Онлайн", description: "Всі відео-уроки в записі" },
     }
   })
-  @Prop({ type: Object, required: true }) // here
-  program: ProgramObject;
+  @Prop({ type: Object, required: true })
+  program: ICourseProgram;
   
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
   @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}]})

@@ -17,19 +17,16 @@ export class CoursesService {
 
   async getAllCourses(dto: SearchCoursesDto) {
     const { type = null, count = 3, skip = 0 } = dto;
+    const countLimit = count > 9 ? 9 : count;
+
     const filteredCourses = (type: string) => {
       switch (type) {
         case null:
           return null;
-          // break;
-        case "Курс":
-          // console.log(2)
+        case "courses":
           return { type: "Курс" };
-          // break;
-        case "Майстер-клас":
-          // console.log(3)
-          return { type: "Майстер-клас" }; // master-class
-          // break;
+        case "master-classes":
+          return { type: "Майстер-клас" };
         default:
           return;
       }
@@ -39,15 +36,15 @@ export class CoursesService {
     const courseList = this.courseModel
       .find(filteredCourses(type))
       .skip(skip)
-      .limit(count)
+      .limit(countLimit)
       .populate({
         path: 'groups',
         options: { sort: { 'days.start': -1 }, limit: 1 }
-      })
+      });
     
     const totalCourses = this.courseModel.countDocuments(filteredCourses(type));
 
-    const [total, data] = await Promise.all([totalCourses, courseList])
+    const [total, data] = await Promise.all([totalCourses, courseList]);
       
     return { total, data };
   }

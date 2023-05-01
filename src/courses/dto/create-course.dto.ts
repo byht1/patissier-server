@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsNumberString, IsString, Matches } from 'class-validator';
+import { IsEnum, IsJSON, IsNotEmpty, IsNumberString, IsString, Matches } from 'class-validator';
 import { errorMessageDto } from 'src/classValidator';
 import { ECourseType } from 'src/db-schemas/course.schema';
 import { fieldsValid } from '../helpers/validation';
@@ -25,7 +25,7 @@ export class CreateCourseDto {
   readonly category: string;
 
   @ApiProperty({
-    example: 'На курсі ви навчитеся працювати з різними видами тіста...',
+    example: 'На курсі ви навчитеся ...',
     description: 'Короткий текст-прев\'ю',
   })
   @Matches(/^\s*\S/, { message: 'previewText should not be empty' })
@@ -48,23 +48,25 @@ export class CreateCourseDto {
   readonly courseDurationDays: number;
 
   @ApiProperty({
-    example: 'Програма навчання розрахована як для кондитерів-початківців, так і для тих, хто хоче підвищити рівень своєї майстерності.',
+    example: 'Програма навчання розрахована як для кондитерів-початківців...',
     description: 'Повний детальний опис курсу даної категорії',
   })
   @Matches(/^\s*\S/, { message: 'description should not be empty' })
   readonly description: string;
 
   @ApiProperty({
-    example: 'details {details_1: {name, description}, {details_2: {name, description}, {details_3: {name, description},',
-    description: 'Сериалізований об\'єкт з трьома полями: details_1, details_2, details_3. Кожне має обов\'язкові поля "name" та "description"', // дописати
+    example: 'details: {details_1: {name, description}, details_2: {name, description}, details_3: {name, description}}',
+    description: 'Сериалізований об\'єкт з трьома полями: details_1, details_2, details_3. Кожне має обов\'язкові поля "name" та "description"',
   })
   // @ValidateSerializedObject()
+  @IsJSON()
   readonly details: string;
 
   @ApiProperty({
-    example: 'program {program_1: {name, description}, {program_2: {name, description}, {program_3: {name, description},',
-    description: 'Сериалізований об\'єкт з трьома полями: program_1, program_2, program_3. Кожне має обов\'язкові поля "name" та "description"', // дописати
+    example: 'program: {program_1: {name, description}, program_2: {name, description}, program_3: {name, description}}',
+    description: 'Сериалізований об\'єкт з трьома полями: program_1, program_2, program_3. Кожне має обов\'язкові поля "name" та "description"',
   })
   // @ValidateSerializedObject()
+  @IsJSON()
   readonly program: string;
 }
