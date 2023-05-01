@@ -1,21 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsNumberString, IsOptional, Matches } from 'class-validator';
-
-enum ECourseSearchType {
-  COURSES ='courses',
-  MASTER_CLASS = 'master-classes',
-}
+import { ECourseType } from 'src/db-schemas/course.schema';
 
 export class SearchCoursesDto {
   @ApiProperty({
     example: 'courses',
-    description: '\'type\' може мати тільки одне із двох значень: \'courses\' або \'master-classes\'',
+    description: '\'type\' може мати тільки одне із двох значень: \'courses\' або \'master_classes\'',
     required: false,
   })
-  @IsEnum(ECourseSearchType, { message: 'This query \'type\' does not exist' })
+  @IsEnum(ECourseType, { message: 'This query \'type\' does not exist' })
   @Matches(/^\s*\S/, { message: 'type should not be empty' })
   @IsOptional()
-  readonly type?: ECourseSearchType;
+  readonly type?: ECourseType;
 
   @ApiProperty({
     example: '3',

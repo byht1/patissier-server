@@ -2,14 +2,14 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsEnum, IsJSON, IsNotEmpty, IsNumberString, IsString, Matches } from 'class-validator';
 import { errorMessageDto } from 'src/classValidator';
 import { ECourseType } from 'src/db-schemas/course.schema';
-import { fieldsValid } from '../helpers/validation';
+import { fieldsValid } from '../helpers';
 // import { ValidateSerializedObject } from 'src/classValidator/decorators/coursesSerializedObjValidate';
 // * - можливо поміняти description
 
 export class CreateCourseDto {
   @ApiProperty({
-    example: 'Курс',
-    description: 'Тип: "Курс" або "Майстер-клас"',
+    example: 'courses',
+    description: 'Тип: "courses" або "master_classes"',
   })
   @IsEnum(ECourseType, { message: 'This type does not exist' })
   @Matches(/^\s*\S/, { message: 'type should not be empty' })

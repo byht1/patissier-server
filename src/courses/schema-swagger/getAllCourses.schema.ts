@@ -8,7 +8,7 @@ export class GetAllCoursesSchema {
   @ApiProperty({
     example: [{
       _id: '64371e7f6bf0ecb4ba9f4247',
-      type: 'Курс',
+      type: 'courses',
       category: 'Торти',
       previewText: 'На курсі ви навчитеся...',
       totalPlaces: 12,

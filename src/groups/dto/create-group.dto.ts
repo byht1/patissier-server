@@ -6,7 +6,7 @@ import { EGroupFormat, ICourseDays, ICourseTime } from "src/db-schemas/group.sch
 export class CreateGroupDto {
     @ApiProperty({
         example: "online",
-        description: 'Формат курсу: \'oline\' або \'offline\'', 
+        description: 'Формат курсу: \'online\' або \'offline\'', 
     })
     @IsEnum(EGroupFormat, { message: 'This format does not exist' })
     @Matches(/^\s*\S/, { message: 'format should not be empty' })

@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 
 export enum ECourseType {
-  COURSE = 'Курс',
-  MASTER_CLASS = 'Майстер-клас',
+  COURSES = 'courses',
+  MASTER_CLASSES = 'master_classes',
 }
 
 export interface INameAndDescrObject {
@@ -31,7 +31,7 @@ export class Course {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
   _id: mongoose.Schema.Types.ObjectId;
 
-  @ApiProperty({ example: 'Курс' })
+  @ApiProperty({ example: 'courses' })
   @Prop({ type: String, enum: Object.values(ECourseType), required: true }) // here
   type: ECourseType;
 

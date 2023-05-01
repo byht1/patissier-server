@@ -3,9 +3,10 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 import { Course, CourseDocument } from 'src/db-schemas/course.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
+import { GroupsService } from 'src/groups/groups.service';
 import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
 // import { SearchGroupsDto } from 'src/groups/dto';
-import { GroupsService } from 'src/groups/groups.service';
+import { filterCourses } from './helpers';
 
 @Injectable()
 export class CoursesService {
@@ -19,22 +20,8 @@ export class CoursesService {
     const { type = null, count = 3, skip = 0 } = dto;
     const countLimit = count > 9 ? 9 : count;
 
-    const filteredCourses = (type: string) => {
-      switch (type) {
-        case null:
-          return null;
-        case "courses":
-          return { type: "Курс" };
-        case "master-classes":
-          return { type: "Майстер-клас" };
-        default:
-          return;
-      }
-    }
-    // console.log("my sign")
-
     const courseList = this.courseModel
-      .find(filteredCourses(type))
+      .find(filterCourses(type))
       .skip(skip)
       .limit(countLimit)
       .populate({
@@ -42,7 +29,7 @@ export class CoursesService {
         options: { sort: { 'days.start': -1 }, limit: 1 }
       });
     
-    const totalCourses = this.courseModel.countDocuments(filteredCourses(type));
+    const totalCourses = this.courseModel.countDocuments(filterCourses(type));
 
     const [total, data] = await Promise.all([totalCourses, courseList]);
       
