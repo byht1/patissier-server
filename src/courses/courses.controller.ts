@@ -10,6 +10,7 @@ import { GroupsService } from 'src/groups/groups.service';
 import { Group } from 'src/db-schemas/group.schema';
 import { GetAllCoursesSchema } from './schema-swagger/getAllCourses.schema';
 import { ValidateIsNotVoid, ValidatePipe } from 'src/classValidator';
+import { CourseValidationPipe } from 'src/classValidator/pipe/courses.pipe';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -48,8 +49,9 @@ export class CoursesController {
   @UsePipes(ValidateIsNotVoid)
   @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 2 }]))
   @Post()
-  createCourse(@Body() dto: CreateCourseDto, @UploadedFiles() files: UploadPictureDto) {
+  createCourse(@Body(CourseValidationPipe) dto: CreateCourseDto, @UploadedFiles() files: UploadPictureDto) {
     return this.coursesService.createCourse(dto, files);
+    // return;
   }
 
   // видалити курс і усе, що з ним пов'язано

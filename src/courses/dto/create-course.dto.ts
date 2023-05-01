@@ -3,6 +3,7 @@ import { IsEnum, IsNotEmpty, IsNumberString, IsString, Matches } from 'class-val
 import { errorMessageDto } from 'src/classValidator';
 import { ECourseType } from 'src/db-schemas/course.schema';
 import { fieldsValid } from '../helpers/validation';
+// import { ValidateSerializedObject } from 'src/classValidator/decorators/coursesSerializedObjValidate';
 // * - можливо поміняти description
 
 export class CreateCourseDto {
@@ -53,49 +54,17 @@ export class CreateCourseDto {
   @Matches(/^\s*\S/, { message: 'description should not be empty' })
   readonly description: string;
 
-// //////////////////////////////////////////////////////////
-  // ------------------------- details fields(3):
+  @ApiProperty({
+    example: 'details {details_1: {name, description}, {details_2: {name, description}, {details_3: {name, description},',
+    description: 'Сериалізований об\'єкт з трьома полями: details_1, details_2, details_3. Кожне має обов\'язкові поля "name" та "description"', // дописати
+  })
+  // @ValidateSerializedObject()
+  readonly details: string;
 
   @ApiProperty({
-    example: 'Кожного дня нова тематика й практичне відпрацювання теорії в процесі приготування',
-    description: 'Опис details_1: сериалізований об\'єкт з полями "name" та "description"',
+    example: 'program {program_1: {name, description}, {program_2: {name, description}, {program_3: {name, description},',
+    description: 'Сериалізований об\'єкт з трьома полями: program_1, program_2, program_3. Кожне має обов\'язкові поля "name" та "description"', // дописати
   })
-  @Matches(/^\s*\S/, { message: 'details_1 should not be empty' })
-  readonly details_1: string;
-
-  @ApiProperty({
-    // example: 'Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти',
-    description: 'Опис details_2: сериалізований об\'єкт з полями "name" та "description"',
-  })
-  @Matches(/^\s*\S/, { message: 'details_2 should not be empty' })
-  readonly details_2: string;
-
-  @ApiProperty({
-    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
-    description: 'Опис details_3: сериалізований об\'єкт з полями "name" та "description"',
-  })
-  @Matches(/^\s*\S/, { message: 'details_3 should not be empty' })
-  readonly details_3: string;
-
-  // ------------------------- program fields(3):
-  @ApiProperty({
-    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
-    description: 'Опис program_1: сериалізований об\'єкт з полями "name" та "description"',
-  })
-  @Matches(/^\s*\S/, { message: 'program_1 should not be empty' })
-  readonly program_1: string;
-
-  @ApiProperty({
-    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
-    description: 'Опис program_2: сериалізований об\'єкт з полями "name" та "description"',
-  })
-  @Matches(/^\s*\S/, { message: 'program_2 should not be empty' })
-  readonly program_2: string;
-
-  @ApiProperty({
-    // example: 'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте.',
-    description: 'Опис program_3: сериалізований об\'єкт з полями "name" та "description"',
-  })
-  @Matches(/^\s*\S/, { message: 'program_3 should not be empty' })
-  readonly program_3: string;
+  // @ValidateSerializedObject()
+  readonly program: string;
 }

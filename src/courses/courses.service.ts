@@ -72,19 +72,9 @@ export class CoursesService {
 
   async createCourse(dto: CreateCourseDto, { images }: UploadPictureDto) {
     try {
-      const {
-        details_1,
-        details_2,
-        details_3,
-        program_1,
-        program_2,
-        program_3,
-      } = dto;
       const newImagesUrl = await this.firebaseStorage.uploadFileArray(images, EStireName.COURSES);
       const course = await this.courseModel.create({
         ...dto,
-        details: {details_1, details_2, details_3},
-        program: {program_1, program_2, program_3},
         images: newImagesUrl,
       });
 

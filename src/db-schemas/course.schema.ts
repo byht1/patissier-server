@@ -7,8 +7,9 @@ export enum ECourseType {
   MASTER_CLASS = 'Майстер-клас',
 }
 
-type StringObject = {
-  [key: string]: string;
+export type StringObject = {
+  name: string;
+  description: string;
 }
 
 export interface DetailsObject {
