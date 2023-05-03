@@ -68,18 +68,20 @@ export class CoursesController {
   }
 
   // створити групу до курсу
+  // @ApiOperation({ summary: 'Add group(s) to a course' })
   @ApiResponse({ status: 201, description: 'Group created', type: Group })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @UsePipes(ValidateIsNotVoid)
   @Post(':courseId/groups')
-  addGroup(@Param('courseId') courseId: ObjectId, 
+  addGroup(@Param('courseId') courseId: ObjectId,
   @Body() groupDto: CreateGroupDto) {
     return this.groupService.createGroup(groupDto, courseId)
   }
 
   // видалити групу з курсу
+  @ApiOperation({ summary: 'Delete a group from a course' })
   @ApiResponse({ status: 200, description: 'Group deleted', type: Group })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 500, description: 'Server error' })

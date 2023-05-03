@@ -43,9 +43,9 @@ export class CreateCourseDto {
     example: 5,
     description: '*Тривалість курсу (к-сть днів або годин)',
   })
-  @IsNumberString({}, { message: 'courseDurationDays must be a number' })
+  @IsNumberString({}, { message: 'courseDuration must be a number' })
   @IsNotEmpty()
-  readonly courseDurationDays: number;
+  readonly courseDuration: number;
 
   @ApiProperty({
     example: 'Програма навчання розрахована як для кондитерів-початківців...',

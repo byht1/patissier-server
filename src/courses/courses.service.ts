@@ -20,35 +20,41 @@ export class CoursesService {
     const { type = null, count = 3, skip = 0 } = dto;
     const countLimit = count > 9 ? 9 : count;
 
+    const filteredCourses = filterCourses(type);
+
     const courseList = this.courseModel
-      .find(filterCourses(type))
+      .find(filteredCourses)
       .skip(skip)
       .limit(countLimit)
       .populate({
         path: 'groups',
-        options: { sort: { 'days.start': -1 }, limit: 1 }
+        options: { sort: { 'days.start': -1 }, limit: 1 },
       });
-    
-    const totalCourses = this.courseModel.countDocuments(filterCourses(type));
 
-    const [total, data] = await Promise.all([totalCourses, courseList]);
-      
-    return { total, data };
+    const totalCourses = this.courseModel.countDocuments(filteredCourses);
+
+    const [totalHits, data] = await Promise.all([totalCourses, courseList]);
+
+    return { totalHits, data };
   }
 
   // async getOneCourse(courseId: ObjectId, searchFormatDto: SearchGroupsDto) {
   async getOneCourse(courseId: ObjectId) {
     // const { format = 'online'} = searchFormatDto;
     // const course = await this.courseModel.findById(courseId).populate('groups');
-    const course = await this.courseModel
-    .findById(courseId)
-    .populate({
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    const course = await this.courseModel.findById(courseId).populate({
       path: 'groups',
+      match: {
+        'studyPeriod.startDate': { $gte: currentDate },
+      },
+      options: { sort: { 'studyPeriod.startDate': -1 } },
       // match: {format: format},
       // options: {limit: 1, select: '-createdAt -updatedAt'},
     });
 
-    if(!course) {
+    if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
@@ -65,21 +71,21 @@ export class CoursesService {
 
       return course;
     } catch (error) {
-      console.log("createCourse error: ", error)
+      console.log('createCourse error: ', error);
     }
   }
 
   async deleteCourse(courseId: ObjectId): Promise<Course> {
     const course = await this.courseModel.findByIdAndRemove(courseId);
 
-    if(!course) {
+    if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    const deleteGroupsPromise = this.groupsService.removeAllCourseGroups(courseId)
+    const deleteGroupsPromise = this.groupsService.removeAllCourseGroups(courseId);
     const deleteImagesPromise = course.images.map(image => this.firebaseStorage.deleteFile(image));
-    
-    await Promise.all([deleteGroupsPromise, deleteImagesPromise])
+
+    await Promise.all([deleteGroupsPromise, deleteImagesPromise]);
 
     return course;
   }
@@ -87,8 +93,8 @@ export class CoursesService {
   async addGroupToCourse(courseId: ObjectId, groupId: ObjectId) {
     const course = await this.courseModel.findById(courseId);
 
-    if(!course) {
-      throw new HttpException('Course not found', HttpStatus.NOT_FOUND); 
+    if (!course) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
     course.groups.push(groupId);
@@ -99,7 +105,7 @@ export class CoursesService {
 
   async deleteGroupFromCourse(courseId: ObjectId, groupId: ObjectId) {
     await this.courseModel.findByIdAndUpdate(courseId, {
-      $pull: {groups: groupId}
+      $pull: { groups: groupId },
     });
 
     return;

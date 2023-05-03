@@ -42,45 +42,56 @@ export class Course {
   @ApiProperty({ example: 'На курсі ви навчитеся...' })
   @Prop({ type: String, required: true })
   previewText: string;
-  
+
   @ApiProperty({ example: 12 })
   @Prop({ type: Number, required: true })
   totalPlaces: number;
 
   @ApiProperty({ example: 5 })
   @Prop({ type: Number, required: true })
-  courseDurationDays: number;
+  courseDuration: number;
 
   @ApiProperty({ example: 'Програма навчання розрахована для кондитерів-початківців...' })
   @Prop({ type: String, required: true })
   description: string;
 
-  @ApiProperty({ example: ['image url'] })
+  @ApiProperty({ example: ['first image url', 'second image url'] })
   @Prop({ type: [String], required: true })
   images: string[];
 
   @ApiProperty({
     example: {
-      details_1: { name: "5 днів практики", description: "Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування" },
-      details_2: { name: "Продукти та інвентар", description: "Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти" },
-      details_3: { name: "Додаткові переваги", description: "Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте" },
-    }
+      details_1: {
+        name: '5 днів практики',
+        description: 'Кожного дня нова тематика й практичне відпрацювання теорії  в процесі приготування',
+      },
+      details_2: {
+        name: 'Продукти та інвентар',
+        description:
+          'Професійні зали обладнано потрібною технікою, а перед початком навчального дня на столах вже знаходяться потрібні продукти',
+      },
+      details_3: {
+        name: 'Додаткові переваги',
+        description:
+          'Надруковані технічні карти, сертифікат про проходження курсу, обід, коробка для тістечок, які ви приготуєте',
+      },
+    },
   })
   @Prop({ type: Object, required: true })
   details: ICourseDetails;
 
   @ApiProperty({
     example: {
-      program_1: { name: "Теорія", description: "Класичний рецепт випічки та глінтвейну" },
-      program_2: { name: "Бонус", description: "за проходження майстер-класу" },
-      program_3: { name: "Онлайн", description: "Всі відео-уроки в записі" },
-    }
+      program_1: { name: 'Теорія', description: 'Класичний рецепт випічки та глінтвейну' },
+      program_2: { name: 'Бонус', description: 'за проходження майстер-класу' },
+      program_3: { name: 'Онлайн', description: 'Всі відео-уроки в записі' },
+    },
   })
   @Prop({ type: Object, required: true })
   program: ICourseProgram;
-  
+
   @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a'] })
-  @Prop({ type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}]})
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Group' }] })
   groups: mongoose.Schema.Types.ObjectId[];
 }
 

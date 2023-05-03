@@ -7,18 +7,19 @@ import { CoursesService } from 'src/courses/courses.service';
 
 @Injectable()
 export class GroupsService {
-  constructor(@InjectModel(Group.name) private groupModel: Model<GroupDocument>,
-    @Inject(forwardRef(() => CoursesService))  
+  constructor(
+    @InjectModel(Group.name) private groupModel: Model<GroupDocument>,
+    @Inject(forwardRef(() => CoursesService))
     private coursesService: CoursesService,
   ) {}
-    // створити групу
+  // створити групу
   async createGroup(createGroupDto: CreateGroupDto, courseId: ObjectId): Promise<Group> {
     const group = await this.groupModel.create({
       ...createGroupDto,
       courseId,
-    })
+    });
 
-    await this.coursesService.addGroupToCourse(courseId, group._id)
+    await this.coursesService.addGroupToCourse(courseId, group._id);
 
     return group;
   }
@@ -32,8 +33,8 @@ export class GroupsService {
   async removeGroup(groupId: ObjectId, courseId: ObjectId) {
     const groupFind = await this.groupModel.findOneAndRemove({ course: courseId, _id: groupId });
 
-    if(!groupFind) {
-      throw new HttpException('Comment not found', HttpStatus.NOT_FOUND);
+    if (!groupFind) {
+      throw new HttpException('Group not found', HttpStatus.NOT_FOUND);
     }
 
     await this.coursesService.deleteGroupFromCourse(courseId, groupId);
@@ -42,7 +43,7 @@ export class GroupsService {
   }
 
   async removeAllCourseGroups(courseId: ObjectId) {
-    await this.groupModel.deleteMany({courseId: courseId});
+    await this.groupModel.deleteMany({ courseId: courseId });
     return;
   }
 }
