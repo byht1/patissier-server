@@ -26,7 +26,7 @@ export class CreateCourseDto {
 
   @ApiProperty({
     example: 'На курсі ви навчитеся ...',
-    description: 'Короткий текст-прев\'ю',
+    description: "Короткий текст-прев'ю",
   })
   @Matches(/^\s*\S/, { message: 'previewText should not be empty' })
   readonly previewText: string;
@@ -35,7 +35,7 @@ export class CreateCourseDto {
     example: 12,
     description: 'Загальна кількість місць на курс',
   })
-  @IsNumberString({}, {message: 'totalPlaces must be a number'}) // ... conforming to the specified constraints
+  @IsNumberString({}, { message: 'totalPlaces must be a number' }) // ... conforming to the specified constraints
   @IsNotEmpty()
   readonly totalPlaces: number;
 
@@ -55,16 +55,20 @@ export class CreateCourseDto {
   readonly description: string;
 
   @ApiProperty({
-    example: 'details: {details_1: {name, description}, details_2: {name, description}, details_3: {name, description}}',
-    description: 'Сериалізований об\'єкт з трьома полями: details_1, details_2, details_3. Кожне має обов\'язкові поля "name" та "description"',
+    example:
+      'details: {details_1: {name, description}, details_2: {name, description}, details_3: {name, description}}',
+    description:
+      'Сериалізований об\'єкт з трьома полями: details_1, details_2, details_3. Кожне має обов\'язкові поля "name" та "description"',
   })
   // @ValidateSerializedObject()
   @IsJSON()
   readonly details: string;
 
   @ApiProperty({
-    example: 'program: {program_1: {name, description}, program_2: {name, description}, program_3: {name, description}}',
-    description: 'Сериалізований об\'єкт з трьома полями: program_1, program_2, program_3. Кожне має обов\'язкові поля "name" та "description"',
+    example:
+      'program: {program_1: {name, description}, program_2: {name, description}, program_3: {name, description}}',
+    description:
+      'Сериалізований об\'єкт з трьома полями: program_1, program_2, program_3. Кожне має обов\'язкові поля "name" та "description"',
   })
   // @ValidateSerializedObject()
   @IsJSON()
