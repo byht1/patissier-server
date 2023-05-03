@@ -1,4 +1,16 @@
-import { Controller, Post, Get, Query, Body, Param, Delete, UploadedFiles, UseInterceptors, UsePipes } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Query,
+  Body,
+  Param,
+  Delete,
+  UploadedFiles,
+  UseInterceptors,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Course } from 'src/db-schemas/course.schema';
 import { CoursesService } from './courses.service';
@@ -15,12 +27,11 @@ import { CourseValidationPipe } from 'src/classValidator/pipe/courses.pipe';
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
-  constructor(private coursesService: CoursesService, 
-    private groupService: GroupsService) {}
+  constructor(private coursesService: CoursesService, private groupService: GroupsService) {}
 
   // отримати усі курси
   @ApiOperation({ summary: 'Get Course List' })
-  @ApiResponse({ status: 200, description: 'Get course list', type: GetAllCoursesSchema})
+  @ApiResponse({ status: 200, description: 'Get course list', type: GetAllCoursesSchema })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @Get()
@@ -30,7 +41,7 @@ export class CoursesController {
 
   // отримати курс по Id
   @ApiOperation({ summary: 'Get all Courses online or offline' })
-  @ApiResponse({ status: 200, description: 'Get all courses', type: Course})
+  @ApiResponse({ status: 200, description: 'Get all courses', type: Course })
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
@@ -72,12 +83,11 @@ export class CoursesController {
   @ApiResponse({ status: 201, description: 'Group created', type: Group })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
-  @UsePipes(ValidatePipe)
+  @UsePipes(ValidationPipe)
   @UsePipes(ValidateIsNotVoid)
   @Post(':courseId/groups')
-  addGroup(@Param('courseId') courseId: ObjectId,
-  @Body() groupDto: CreateGroupDto) {
-    return this.groupService.createGroup(groupDto, courseId)
+  addGroup(@Param('courseId') courseId: ObjectId, @Body() groupDto: CreateGroupDto) {
+    return this.groupService.createGroup(groupDto, courseId);
   }
 
   // видалити групу з курсу
@@ -86,9 +96,8 @@ export class CoursesController {
   @ApiResponse({ status: 404, description: 'Not Found' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @Delete(':courseId/groups/:groupId')
-  deleteGroup(@Param('courseId') courseId: ObjectId, 
-  @Param('groupId') groupId: ObjectId) {
-    return this.groupService.removeGroup(groupId, courseId)
+  deleteGroup(@Param('courseId') courseId: ObjectId, @Param('groupId') groupId: ObjectId) {
+    return this.groupService.removeGroup(groupId, courseId);
   }
 
   // замінити картинки до курсу (1 або 2)

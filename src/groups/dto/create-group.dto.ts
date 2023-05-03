@@ -1,6 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDefined, IsEnum, IsNotEmpty, IsNumber, Matches } from 'class-validator';
-import { EGroupFormat, IStudyPeriod, IGroupScheduleTime } from 'src/db-schemas/group.schema';
+import { Type } from 'class-transformer';
+import { IsDefined, IsEnum, IsNotEmpty, IsNumber, Matches, Validate, ValidateNested } from 'class-validator';
+import { EndLaterThanStartRule } from 'src/classValidator/decorators/groupDateValidate';
+import { EGroupFormat } from 'src/db-schemas/group.schema';
+
+class StudyPeriodDto {
+  @Matches(/^\s*\S/, { message: 'startDate must be a string' })
+  @IsDefined()
+  readonly startDate: string;
+
+  @Matches(/^\s*\S/, { message: 'endDate must be a string' })
+  @Validate(EndLaterThanStartRule)
+  @IsDefined()
+  readonly endDate: string;
+}
+
+class GroupScheduleTimeDto {
+  @Matches(/^\s*\S/, { message: 'from must be a string' })
+  @IsDefined()
+  readonly from: string;
+
+  @Matches(/^\s*\S/, { message: 'to must be a string' })
+  @Validate(EndLaterThanStartRule)
+  @IsDefined()
+  readonly to: string;
+}
 
 export class CreateGroupDto {
   @ApiProperty({
@@ -18,8 +42,10 @@ export class CreateGroupDto {
     },
     description: 'Дата початку й дата завершення у форматі YYYY-MM-DD',
   })
+  @Type(() => StudyPeriodDto)
+  @ValidateNested()
   @IsDefined()
-  readonly studyPeriod: IStudyPeriod;
+  readonly studyPeriod: StudyPeriodDto;
 
   @ApiProperty({
     example: {
@@ -28,8 +54,10 @@ export class CreateGroupDto {
     },
     description: 'Час початку й час завершення у форматі HH:MM',
   })
+  @Type(() => GroupScheduleTimeDto)
+  @ValidateNested()
   @IsDefined()
-  readonly time: IGroupScheduleTime;
+  readonly time: GroupScheduleTimeDto;
 
   @ApiProperty({ example: 2000 })
   @IsNumber({}, { message: 'price must be a number' })

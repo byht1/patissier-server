@@ -7,9 +7,6 @@ import { MongooseModule } from '@nestjs/mongoose';
 @Module({
   providers: [GroupsService],
   exports: [GroupsService],
-  imports: [
-    MongooseModule.forFeature([{ name: Group.name, schema: GroupSchema }]), 
-    forwardRef(() => CoursesModule),
-  ],
+  imports: [MongooseModule.forFeature([{ name: Group.name, schema: GroupSchema }]), forwardRef(() => CoursesModule)],
 })
 export class GroupsModule {}
