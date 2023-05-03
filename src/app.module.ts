@@ -7,6 +7,7 @@ import { CatalogModule } from './catalog/catalog.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { AuthModule } from './auth/auth.module';
 import { StoreModule } from './store/store.module';
+import { GroupsModule } from './groups/groups.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { StoreModule } from './store/store.module';
     ReviewsModule,
     AuthModule,
     StoreModule,
+    GroupsModule,
   ],
   providers: [],
 })
