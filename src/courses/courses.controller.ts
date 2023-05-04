@@ -71,11 +71,10 @@ export class CoursesController {
   @ApiResponse({ status: 200, type: Course, description: 'Course updated' })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
-  // @UsePipes(ValidatePipe)
-  // @UsePipes(ValidationPipe)
+  @UsePipes(ValidationPipe)
   @UsePipes(ValidateIsNotVoid)
   @Patch(':courseId')
-  updateCourse(@Param('courseId') courseId: ObjectId, @Body(ValidationPipe) updateCourseDto: UpdateCourseDto) {
+  updateCourse(@Param('courseId') courseId: ObjectId, @Body() updateCourseDto: UpdateCourseDto) {
     return this.coursesService.updateCourse(updateCourseDto, courseId);
   }
 
