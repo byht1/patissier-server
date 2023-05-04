@@ -10,12 +10,13 @@ import {
   UseInterceptors,
   UsePipes,
   ValidationPipe,
+  Patch,
 } from '@nestjs/common';
 import { ApiConsumes, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Course } from 'src/db-schemas/course.schema';
 import { CoursesService } from './courses.service';
 import { ObjectId } from 'mongoose';
-import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
+import { CreateCourseDto, SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { CreateGroupDto } from 'src/groups/dto';
 import { GroupsService } from 'src/groups/groups.service';
@@ -28,7 +29,20 @@ import { CourseValidationPipe } from 'src/classValidator/pipe/courses.pipe';
 @Controller('courses')
 export class CoursesController {
   constructor(private coursesService: CoursesService, private groupService: GroupsService) {}
-
+  // створити курс
+  @ApiOperation({ summary: 'Create course' })
+  @ApiConsumes('multipart/form-data')
+  @ApiResponse({ status: 201, type: Course, description: 'Course created' })
+  @ApiResponse({ status: 400, description: 'Invalid data' })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  @UsePipes(ValidatePipe)
+  @UsePipes(ValidateIsNotVoid)
+  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 2 }]))
+  @Post()
+  createCourse(@Body(CourseValidationPipe) dto: CreateCourseDto, @UploadedFiles() files: UploadPictureDto) {
+    return this.coursesService.createCourse(dto, files);
+    // return;
+  }
   // отримати усі курси
   @ApiOperation({ summary: 'Get Course List' })
   @ApiResponse({ status: 200, description: 'Get course list', type: GetAllCoursesSchema })
@@ -49,20 +63,17 @@ export class CoursesController {
   getOneCourse(@Param('courseId') courseId: ObjectId) {
     return this.coursesService.getOneCourse(courseId);
   }
-
-  // створити курс
-  @ApiOperation({ summary: 'Create course' })
-  @ApiConsumes('multipart/form-data')
-  @ApiResponse({ status: 201, type: Course, description: 'Course created' })
+  // update course
+  @ApiOperation({ summary: 'Update course' })
+  @ApiResponse({ status: 200, type: Course, description: 'Course updated' })
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
-  @UsePipes(ValidatePipe)
+  // @UsePipes(ValidatePipe)
+  // @UsePipes(ValidationPipe)
   @UsePipes(ValidateIsNotVoid)
-  @UseInterceptors(FileFieldsInterceptor([{ name: 'images', maxCount: 2 }]))
-  @Post()
-  createCourse(@Body(CourseValidationPipe) dto: CreateCourseDto, @UploadedFiles() files: UploadPictureDto) {
-    return this.coursesService.createCourse(dto, files);
-    // return;
+  @Patch(':courseId')
+  updateCourse(@Param('courseId') courseId: ObjectId, @Body(ValidationPipe) updateCourseDto: UpdateCourseDto) {
+    return this.coursesService.updateCourse(updateCourseDto, courseId);
   }
 
   // видалити курс і усе, що з ним пов'язано

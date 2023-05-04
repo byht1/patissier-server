@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CourseDocument } from 'src/db-schemas/course.schema';
 
 export class GetAllCoursesSchema {
-  @ApiProperty({ example: '12' })
+  @ApiProperty({ example: 12 })
   totalHits: number;
 
   @ApiProperty({
@@ -59,4 +59,7 @@ export class GetAllCoursesSchema {
     ],
   })
   data: CourseDocument[];
+
+  @ApiProperty({ example: 3 })
+  limit: number;
 }
