@@ -1,4 +1,4 @@
-import { IsObject, IsOptional, IsString, Matches } from 'class-validator';
+import { IsObject, IsOptional, Matches } from 'class-validator';
 
 export class NameAndDescDto {
   @Matches(/^\s*\S/, { message: 'field must be a string' })
