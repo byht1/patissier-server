@@ -1,10 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CourseDocument } from 'src/db-schemas/course.schema';
 
-export class GetAllCoursesSchema {
-  @ApiProperty({ example: 12 })
-  totalHits: number;
-
+export class GetOneCourseSchema {
   @ApiProperty({
     example: [
       {
@@ -58,8 +55,11 @@ export class GetAllCoursesSchema {
       },
     ],
   })
-  data: CourseDocument[];
+  data: CourseDocument;
 
-  @ApiProperty({ example: 3 })
-  limit: number;
+  @ApiProperty({ example: 23 })
+  totalGroups: number;
+
+  @ApiProperty({ example: 16 })
+  groupLimit: number;
 }

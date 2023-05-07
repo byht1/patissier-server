@@ -9,10 +9,7 @@ import { GroupsModule } from 'src/groups/groups.module';
 @Module({
   controllers: [CoursesController],
   providers: [CoursesService, FirebaseStorageManager, GroupsModule],
-  imports: [
-    MongooseModule.forFeature([{ name: Course.name, schema: CourseSchema }]),
-    GroupsModule,
-  ],
+  imports: [MongooseModule.forFeature([{ name: Course.name, schema: CourseSchema }]), GroupsModule],
   exports: [CoursesService],
 })
 export class CoursesModule {}

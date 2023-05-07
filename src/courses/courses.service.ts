@@ -4,8 +4,7 @@ import { Model, ObjectId } from 'mongoose';
 import { Course, CourseDocument } from 'src/db-schemas/course.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { GroupsService } from 'src/groups/groups.service';
-import { CreateCourseDto, SearchCoursesDto, UploadPictureDto } from './dto';
-// import { SearchGroupsDto } from 'src/groups/dto';
+import { CreateCourseDto, SearchCourseGroupsDto, SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
 import { filterCourses } from './helpers';
 
 @Injectable()
@@ -16,9 +15,23 @@ export class CoursesService {
     private groupsService: GroupsService,
   ) {}
 
-  async getAllCourses(dto: SearchCoursesDto) {
-    const { type = null, count = 3, skip = 0 } = dto;
-    const countLimit = count > 9 ? 9 : count;
+  async createCourse(createCourseDto: CreateCourseDto, { images }: UploadPictureDto) {
+    try {
+      const newImagesUrl = await this.firebaseStorage.uploadFileArray(images, EStireName.COURSES);
+      const course = await this.courseModel.create({
+        ...createCourseDto,
+        images: newImagesUrl,
+      });
+
+      return course;
+    } catch (error) {
+      console.log('createCourse error: ', error);
+    }
+  }
+
+  async getAllCourses(searchCOursesDto: SearchCoursesDto) {
+    const { type = null, limit = 3, skip = 0 } = searchCOursesDto;
+    const countLimit = limit > 9 ? 9 : limit;
 
     const filteredCourses = filterCourses(type);
 
@@ -35,44 +48,68 @@ export class CoursesService {
 
     const [totalHits, data] = await Promise.all([totalCourses, courseList]);
 
-    return { totalHits, data };
+    return { totalHits, data, limit: +countLimit };
   }
 
-  // async getOneCourse(courseId: ObjectId, searchFormatDto: SearchGroupsDto) {
-  async getOneCourse(courseId: ObjectId) {
-    // const { format = 'online'} = searchFormatDto;
-    // const course = await this.courseModel.findById(courseId).populate('groups');
+  async getOneCourse(courseId: ObjectId, searchGroupsDto: SearchCourseGroupsDto) {
+    const { format, limit = 16, skip = 0 } = searchGroupsDto;
+    const countLimit = limit > 16 ? 16 : limit;
+
     const currentDate = new Date().toISOString().slice(0, 10);
 
-    const course = await this.courseModel.findById(courseId).populate({
+    const coursePopulated = await this.courseModel.findById(courseId).populate({
       path: 'groups',
       match: {
+        ...(format && { format }),
         'studyPeriod.startDate': { $gte: currentDate },
       },
-      options: { sort: { 'studyPeriod.startDate': -1 } },
-      // match: {format: format},
-      // options: {limit: 1, select: '-createdAt -updatedAt'},
+      options: { sort: { 'studyPeriod.startDate': -1 }, limit: countLimit, skip },
     });
+
+    const fullCourse = await this.courseModel.findById(courseId);
+    const groupCount = fullCourse.groups.length;
+
+    const [course, totalGroups] = await Promise.all([coursePopulated, groupCount]);
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    return course;
+    return { course, totalGroups, groupLimit: +countLimit };
   }
 
-  async createCourse(dto: CreateCourseDto, { images }: UploadPictureDto) {
-    try {
-      const newImagesUrl = await this.firebaseStorage.uploadFileArray(images, EStireName.COURSES);
-      const course = await this.courseModel.create({
-        ...dto,
-        images: newImagesUrl,
-      });
-
-      return course;
-    } catch (error) {
-      console.log('createCourse error: ', error);
+  async updateCourse(updateCourseDto: UpdateCourseDto, courseId: ObjectId) {
+    const { type, category, previewText, totalPlaces, courseDuration, description, details, program } = updateCourseDto;
+    const courseFind = await this.courseModel.findById(courseId);
+    if (!courseFind) {
+      throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
+    const updateObject = {
+      ...(type && { type }),
+      ...(category && { category }),
+      ...(previewText && { previewText }),
+      ...(totalPlaces && { totalPlaces }),
+      ...(courseDuration && { courseDuration }),
+      ...(description && { description }),
+
+      'details.details_1.name': details?.details_1?.name,
+      'details.details_1.description': details?.details_1?.description,
+      'details.details_2.name': details?.details_2?.name,
+      'details.details_2.description': details?.details_2?.description,
+      'details.details_3.name': details?.details_3?.name,
+      'details.details_3.description': details?.details_3?.description,
+      //
+      'program.program_1.name': program?.program_1?.name,
+      'program.program_1.description': program?.program_1?.description,
+      'program.program_2.name': program?.program_2?.name,
+      'program.program_2.description': program?.program_2?.description,
+      'program.program_3.name': program?.program_3?.name,
+      'program.program_3.description': program?.program_3?.description,
+    };
+
+    const courseUpdated = await this.courseModel.findByIdAndUpdate(courseId, updateObject, { new: true });
+    return courseUpdated;
+    // return 'my return';
   }
 
   async deleteCourse(courseId: ObjectId): Promise<Course> {
