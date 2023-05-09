@@ -58,7 +58,7 @@ export class GetAllCoursesSchema {
       },
     ],
   })
-  data: CourseDocument[];
+  courses: CourseDocument[];
 
   @ApiProperty({ example: 3 })
   limit: number;

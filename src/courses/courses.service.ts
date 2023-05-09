@@ -29,7 +29,7 @@ export class CoursesService {
     }
   }
 
-  async getAllCourses(searchCOursesDto: SearchCoursesDto) {
+  async getCourses(searchCOursesDto: SearchCoursesDto) {
     const { type = null, limit = 3, skip = 0 } = searchCOursesDto;
     const countLimit = limit > 9 ? 9 : limit;
 
@@ -37,7 +37,7 @@ export class CoursesService {
 
     const filteredCourses = filterCourses(type);
 
-    const courseList = this.courseModel
+    const coursesPromise = this.courseModel
       .find(filteredCourses)
       .skip(skip)
       .limit(countLimit)
@@ -49,38 +49,32 @@ export class CoursesService {
         options: { sort: { 'studyPeriod.startDate': 1 }, limit: 1 },
       });
 
-    const totalCourses = this.courseModel.countDocuments(filteredCourses);
+    const totalCoursesPromise = this.courseModel.countDocuments(filteredCourses);
 
-    const [totalHits, data] = await Promise.all([totalCourses, courseList]);
+    const [courses, totalHits] = await Promise.all([coursesPromise, totalCoursesPromise]);
 
-    return { totalHits, data, limit: +countLimit };
+    return { totalHits, courses, limit: +countLimit };
   }
 
   async getOneCourse(courseId: ObjectId, searchGroupsDto: SearchCourseGroupsDto) {
-    const { format, limit = 16, skip = 0 } = searchGroupsDto;
-    const countLimit = limit > 16 ? 16 : limit;
+    const { format } = searchGroupsDto;
 
     const currentDate = new Date().toISOString().slice(0, 10);
 
-    const coursePopulated = await this.courseModel.findById(courseId).populate({
+    const course = await this.courseModel.findById(courseId).populate({
       path: 'groups',
       match: {
         ...(format && { format }),
         'studyPeriod.startDate': { $gte: currentDate },
       },
-      options: { sort: { 'studyPeriod.startDate': 1 }, limit: countLimit, skip },
+      options: { sort: { 'studyPeriod.startDate': 1 }, limit: 16 },
     });
-
-    const fullCourse = await this.courseModel.findById(courseId);
-    const groupCount = fullCourse.groups.length;
-
-    const [course, totalGroups] = await Promise.all([coursePopulated, groupCount]);
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
 
-    return { course, totalGroups, groupLimit: +countLimit };
+    return course;
   }
 
   async updateCourse(updateCourseDto: UpdateCourseDto, courseId: ObjectId) {
