@@ -53,7 +53,7 @@ export class CoursesController {
   @UsePipes(ValidatePipe)
   @Get()
   getCourses(@Query() searchDto: SearchCoursesDto) {
-    return this.coursesService.getAllCourses(searchDto);
+    return this.coursesService.getCourses(searchDto);
   }
 
   // отримати курс по Id
