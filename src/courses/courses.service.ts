@@ -63,7 +63,7 @@ export class CoursesService {
         ...(format && { format }),
         'studyPeriod.startDate': { $gte: currentDate },
       },
-      options: { sort: { 'studyPeriod.startDate': -1 }, limit: countLimit, skip },
+      options: { sort: { 'studyPeriod.startDate': 1 }, limit: countLimit, skip },
     });
 
     const fullCourse = await this.courseModel.findById(courseId);
