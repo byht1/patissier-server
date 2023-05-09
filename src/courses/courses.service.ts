@@ -33,6 +33,8 @@ export class CoursesService {
     const { type = null, limit = 3, skip = 0 } = searchCOursesDto;
     const countLimit = limit > 9 ? 9 : limit;
 
+    const currentDate = new Date().toISOString().slice(0, 10);
+
     const filteredCourses = filterCourses(type);
 
     const courseList = this.courseModel
@@ -41,7 +43,10 @@ export class CoursesService {
       .limit(countLimit)
       .populate({
         path: 'groups',
-        options: { sort: { 'days.start': -1 }, limit: 1 },
+        match: {
+          'studyPeriod.startDate': { $gte: currentDate },
+        },
+        options: { sort: { 'studyPeriod.startDate': 1 }, limit: 1 },
       });
 
     const totalCourses = this.courseModel.countDocuments(filteredCourses);
