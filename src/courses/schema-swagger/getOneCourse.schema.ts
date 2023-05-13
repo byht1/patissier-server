@@ -19,8 +19,8 @@ export class GetOneCourseSchema {
   @ApiProperty({ example: 12 })
   totalPlaces: number;
 
-  @ApiProperty({ example: 5 })
-  courseDuration: number;
+  @ApiProperty({ example: '5 днів' })
+  courseDuration: string;
 
   @ApiProperty({ example: 'Програма навчання розрахована для кондитерів-початківців...' })
   description: string;
