@@ -13,7 +13,7 @@ export class GetAllCoursesSchema {
         category: 'Торти',
         previewText: 'На курсі ви навчитеся...',
         totalPlaces: 12,
-        courseDuration: 5,
+        courseDuration: '5 днів',
         description: 'Програма навчання розрахована як для кондитерів-початківців...',
         images: ['first image url', 'second image url'],
         details: {

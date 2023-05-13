@@ -47,9 +47,9 @@ export class Course {
   @Prop({ type: Number, required: true })
   totalPlaces: number;
 
-  @ApiProperty({ example: 5 })
-  @Prop({ type: Number, required: true })
-  courseDuration: number;
+  @ApiProperty({ example: '5 днів' })
+  @Prop({ type: String, required: true })
+  courseDuration: string;
 
   @ApiProperty({ example: 'Програма навчання розрахована для кондитерів-початківців...' })
   @Prop({ type: String, required: true })
@@ -96,3 +96,5 @@ export class Course {
 }
 
 export const CourseSchema = SchemaFactory.createForClass(Course);
+
+export const courseDurationAvailableWords = ['дні', 'днів', 'години', 'годин'];

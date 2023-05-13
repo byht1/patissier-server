@@ -10,7 +10,12 @@ import {
   ValidateNested,
 } from 'class-validator';
 import { errorMessageDto } from 'src/classValidator';
-import { ECourseType, ICourseDetails, ICourseProgram } from 'src/db-schemas/course.schema';
+import {
+  ECourseType,
+  ICourseDetails,
+  ICourseProgram,
+  courseDurationAvailableWords,
+} from 'src/db-schemas/course.schema';
 import { fieldsValid } from '../helpers';
 import { Type } from 'class-transformer';
 import { CourseDetailsDto, CourseProgramDto } from './detailsAndProgram.dto';
@@ -57,14 +62,16 @@ export class UpdateCourseDto {
   readonly totalPlaces: number;
 
   @ApiProperty({
-    example: 5,
-    description: '*Тривалість курсу (к-сть днів або годин)',
+    example: '5 днів',
+    description: 'Тривалість курсу: к-сть днів або годин',
     required: false,
   })
-  @IsNumberString({}, { message: 'courseDuration must be a number' })
-  @IsNotEmpty()
-  @IsOptional()
-  readonly courseDuration: number;
+  @IsString()
+  @Matches(/(\d+)\s*(дні|днів|години|годин)/, {
+    message: `courseDuration must include a number and one of the words: ${courseDurationAvailableWords.join(', ')}`,
+  })
+  @IsString()
+  readonly courseDuration: string;
 
   @ApiProperty({
     example: 'Програма навчання розрахована як для кондитерів-початківців...',
