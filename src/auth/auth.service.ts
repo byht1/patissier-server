@@ -131,10 +131,12 @@ export class AuthService {
     return;
   }
 
-  async forgottenPasswordRedirect(linkId: string): Promise<void> {
-    await this.forgottenPasswordUserSearch(linkId);
+  async forgottenPasswordRedirect(linkId: string): Promise<boolean> {
+    const user = await this.forgottenPasswordUserSearch(linkId);
 
-    return;
+    if(user) return true
+
+    return false
   }
 
   async forgottenPasswordError(linkId: string): Promise<void> {

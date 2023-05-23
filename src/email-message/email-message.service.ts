@@ -9,12 +9,12 @@ export class EmailMessageService {
   async newUserMessage(email: string): Promise<string> {
     const dev = process.env.DEV
       ? `http://localhost:${process.env.PORT}`
-      : 'https://patissier-server.herokuapp.com';
+      : process.env.REDIRECT_ROOT_LINK || 'http://localhost:3000/patissier-client';
     const link = uuidv4();
     const title = 'Підтвердження пошти на сайті Bakery';
     const html = `<div>
     <h1>Підтвердження пошти на сайті Bakery</h1>
-    <span>Для підтвердження перейдіть  <a href="${dev}/auth/activate/${link}">за посиланням</a></span>
+    <span>Для підтвердження перейдіть  <a href="${dev}/auth/active/${link}">за посиланням</a></span>
     </div>`;
     // if (!dev) {
     await this.example(html, title, email);
@@ -26,7 +26,7 @@ export class EmailMessageService {
   async forgottenPassword(email): Promise<string> {
     const dev = process.env.DEV
       ? `http://localhost:${process.env.PORT}`
-      : 'https://patissier-server.herokuapp.com';
+      : process.env.REDIRECT_ROOT_LINK || 'http://localhost:3000/patissier-client';
     const link = uuidv4();
     const title = 'Зміна пароля на сайті Bakery';
     const html = `<div>
@@ -42,11 +42,7 @@ export class EmailMessageService {
     return link;
   }
 
-  private async example(
-    html: string,
-    title: string,
-    email: string,
-  ): Promise<void> {
+  private async example(html: string, title: string, email: string): Promise<void> {
     try {
       await this.mailerService.sendMail({
         to: email,
@@ -55,10 +51,7 @@ export class EmailMessageService {
         html,
       });
     } catch {
-      throw new HttpException(
-        'Не вдалося відправити повідомлення на пошту',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      throw new HttpException('Не вдалося відправити повідомлення на пошту', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // .then(info => {

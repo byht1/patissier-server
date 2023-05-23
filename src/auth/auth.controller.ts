@@ -23,6 +23,7 @@ import { IReqUser } from 'src/type';
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+  private redirectRootLink = process.env.REDIRECT_ROOT_LINK || 'http://localhost:3000/patissier-client';
   constructor(private authService: AuthService) {}
 
   @ApiResponse({ status: 201, type: Users })
@@ -66,17 +67,32 @@ export class AuthController {
     return this.authService.logOut(req.user, req.currentToken);
   }
 
+  @ApiHeaders([
+    {
+      name: 'Authorization',
+      required: true,
+      description: 'The token issued to the current user.',
+    },
+  ])
+  @ApiResponse({ status: 201, type: Users })
+  @ApiResponse({ status: 403, description: 'Не валідний токен' })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  @UseGuards(JwtAuthGuard)
+  @Get('current')
+  current(@Req() req: IReqUser) {
+    return req.user;
+  }
+
   @Get('/active/:verificationToken')
-  // Переробити
   @Redirect('', 302)
-  verification(@Param('verificationToken') verificationToken: string) {
-    const status = this.authService.verification(verificationToken);
+  async verification(@Param('verificationToken') verificationToken: string) {
+    const status = await this.authService.verification(verificationToken);
 
-    // Переробити
-    if (status) return { url: '' };
+    // Якщо валідний
+    if (status) return { url: this.redirectRootLink };
 
-    // Переробити
-    return { url: '' };
+    // якщо не валідний
+    return { url: this.redirectRootLink + '/error/invalid/active' };
   }
 
   @ApiResponse({ status: 204 })
@@ -120,23 +136,23 @@ export class AuthController {
   }
 
   @Get('/forgotten-password/:link')
-  // Переробити
   @Redirect('', 302)
   async forgottenPasswordRedirect(@Param('link') link: string) {
-    await this.authService.forgottenPasswordRedirect(link);
+    const isValid = await this.authService.forgottenPasswordRedirect(link);
 
-    // Переробити
-    return { url: `.../${link}` };
+    // Якщо валідний
+    if (isValid) return { url: this.redirectRootLink + '/forgotten-password/new' };
+
+    // якщо не валідний
+    return { url: this.redirectRootLink + '/error/invalid/password' };
   }
 
   @Get('/forgotten-password/error/:link')
-  // Переробити
   @Redirect('', 302)
   async forgottenPasswordError(@Param('link') link: string) {
     await this.authService.forgottenPasswordError(link);
 
-    // Переробити
-    return { url: `.../${link}` };
+    return { url: this.redirectRootLink + '/forgotten-password/error/skip' };
   }
 
   @Patch('/forgotten-password/new/:link')
