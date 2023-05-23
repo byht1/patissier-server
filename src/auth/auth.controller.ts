@@ -135,13 +135,13 @@ export class AuthController {
     return this.authService.forgottenPassword(emailDto.email);
   }
 
-  @Get('/forgotten-password/:link')
+  @Get('/forgotten-password/:resetToken')
   @Redirect('', 302)
-  async forgottenPasswordRedirect(@Param('link') link: string) {
-    const isValid = await this.authService.forgottenPasswordRedirect(link);
+  async forgottenPasswordRedirect(@Param('resetToken') resetToken: string) {
+    const isValid = await this.authService.forgottenPasswordRedirect(resetToken);
 
     // Якщо валідний
-    if (isValid) return { url: this.redirectRootLink + '/forgotten-password/new' };
+    if (isValid) return { url: `${this.redirectRootLink}/forgotten-password/new?resetToken=${resetToken}` };
 
     // якщо не валідний
     return { url: this.redirectRootLink + '/error/invalid/password' };
