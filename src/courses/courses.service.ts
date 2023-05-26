@@ -1,11 +1,14 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
+
 import { Course, CourseDocument } from 'src/db-schemas/course.schema';
+import { GroupDocument } from 'src/db-schemas/group.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { GroupsService } from 'src/groups/groups.service';
+
 import { CreateCourseDto, SearchCourseGroupsDto, SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
-import { filterCourses } from './helpers';
+import { filterCourses, formatDate } from './helpers';
 
 @Injectable()
 export class CoursesService {
@@ -60,21 +63,34 @@ export class CoursesService {
     const { format } = searchGroupsDto;
 
     const currentDate = new Date().toISOString().slice(0, 10);
-
-    const course = await this.courseModel.findById(courseId).populate({
-      path: 'groups',
-      match: {
-        ...(format && { format }),
-        'studyPeriod.startDate': { $gte: currentDate },
-      },
-      options: { sort: { 'studyPeriod.startDate': 1 }, limit: 16 },
-    });
+    // запит:
+    const course = await this.courseModel
+      .findById(courseId)
+      .populate({
+        path: 'groups',
+        match: {
+          ...(format && { format }),
+          'studyPeriod.startDate': { $gte: currentDate },
+        },
+        options: { sort: { 'studyPeriod.startDate': 1 }, limit: 16 },
+      })
+      .lean();
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
+    //  date formatting:
+    const groups = JSON.parse(JSON.stringify(course)).groups;
 
-    return course;
+    const groupsWithFormattedDates = groups.map((group: GroupDocument) => ({
+      ...group,
+      studyPeriod: {
+        startDate: formatDate(group.studyPeriod.startDate),
+        endDate: formatDate(group.studyPeriod.endDate),
+      },
+    }));
+
+    return { ...course, groups: groupsWithFormattedDates };
   }
 
   async updateCourse(updateCourseDto: UpdateCourseDto, courseId: ObjectId) {
