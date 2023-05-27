@@ -1,14 +1,15 @@
 import * as date from 'date-and-time';
 import { EMonths, EWeekDays } from './translation';
 
-export const formatDate = (periodDate: string) => {
+export const formatStudyPeriod = (periodDate: string) => {
   const [twoDigitDay, monthName, weekDay] = date.format(new Date(periodDate), 'DD MMMM dddd').split(' ');
-  const formatedDate = `${twoDigitDay} ${EMonths[monthName]}, ${EWeekDays[weekDay]}`;
-  //   if (formatedDate.includes('undefined')) {
-  //     return 'Invalid Date';
-  //   }
+  const formattedDate = `${twoDigitDay} ${EMonths[monthName]}, ${EWeekDays[weekDay]}`;
 
-  //   console.log('🚀 ~ formatedDate:', formatedDate);
+  if (formattedDate.includes('undefined')) {
+    return 'Invalid date';
+  }
 
-  return formatedDate;
+  // console.log('🚀 ~ formattedDate:', formattedDate);
+
+  return formattedDate;
 };

@@ -8,7 +8,7 @@ import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { GroupsService } from 'src/groups/groups.service';
 
 import { CreateCourseDto, SearchCourseGroupsDto, SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
-import { filterCourses, formatDate } from './helpers';
+import { filterCourses, formatStudyPeriod } from './helpers';
 
 @Injectable()
 export class CoursesService {
@@ -63,7 +63,7 @@ export class CoursesService {
     const { format } = searchGroupsDto;
 
     const currentDate = new Date().toISOString().slice(0, 10);
-    // запит:
+
     const course = await this.courseModel
       .findById(courseId)
       .populate({
@@ -80,13 +80,11 @@ export class CoursesService {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
     //  date formatting:
-    const groups = JSON.parse(JSON.stringify(course)).groups;
-
-    const groupsWithFormattedDates = groups.map((group: GroupDocument) => ({
+    const groupsWithFormattedDates = (course.groups.map(group => group.valueOf()) as GroupDocument[]).map(group => ({
       ...group,
       studyPeriod: {
-        startDate: formatDate(group.studyPeriod.startDate),
-        endDate: formatDate(group.studyPeriod.endDate),
+        startDate: formatStudyPeriod(group.studyPeriod.startDate),
+        endDate: formatStudyPeriod(group.studyPeriod.endDate),
       },
     }));
 
@@ -96,9 +94,11 @@ export class CoursesService {
   async updateCourse(updateCourseDto: UpdateCourseDto, courseId: ObjectId) {
     const { type, category, previewText, totalPlaces, courseDuration, description, details, program } = updateCourseDto;
     const courseFind = await this.courseModel.findById(courseId);
+
     if (!courseFind) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
+
     const updateObject = {
       ...(type && { type }),
       ...(category && { category }),
