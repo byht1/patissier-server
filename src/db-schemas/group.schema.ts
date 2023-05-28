@@ -10,8 +10,8 @@ export enum EGroupFormat {
 }
 
 export interface IStudyPeriod {
-  start: string;
-  end: string;
+  startDate: string;
+  endDate: string;
 }
 
 export interface IGroupScheduleTime {
