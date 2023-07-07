@@ -49,7 +49,7 @@ export class CoursesService {
         match: {
           'studyPeriod.startDate': { $gte: currentDate },
         },
-        options: { sort: { 'studyPeriod.startDate': 1 }, limit: 1 },
+        options: { sort: { 'studyPeriod.startDate': 1 }, perDocumentLimit: 1 },
       });
 
     const totalCoursesPromise = this.courseModel.countDocuments(filteredCourses);
