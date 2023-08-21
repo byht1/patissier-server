@@ -26,6 +26,7 @@ export class Group {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
   _id: mongoose.Schema.Types.ObjectId;
 
+  @ApiProperty({ example: 'online' })
   @Prop({ type: String, enum: Object.values(EGroupFormat), required: true })
   format: EGroupFormat;
 

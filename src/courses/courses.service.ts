@@ -3,12 +3,11 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, ObjectId } from 'mongoose';
 
 import { Course, CourseDocument } from 'src/db-schemas/course.schema';
-import { GroupDocument } from 'src/db-schemas/group.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { GroupsService } from 'src/groups/groups.service';
 
-import { CreateCourseDto, SearchCourseGroupsDto, SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
-import { filterCourses, formatStudyPeriod } from './helpers';
+import { CreateCourseDto,  SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
+import { filterCourses } from './helpers';
 
 @Injectable()
 export class CoursesService {
@@ -59,36 +58,14 @@ export class CoursesService {
     return { totalHits, courses, limit: +countLimit };
   }
 
-  async getOneCourse(courseId: ObjectId, searchGroupsDto: SearchCourseGroupsDto) {
-    const { format } = searchGroupsDto;
-
-    const currentDate = new Date().toISOString().slice(0, 10);
-
-    const course = await this.courseModel
-      .findById(courseId)
-      .populate({
-        path: 'groups',
-        match: {
-          ...(format && { format }),
-          'studyPeriod.startDate': { $gte: currentDate },
-        },
-        options: { sort: { 'studyPeriod.startDate': 1 }, limit: 16 },
-      })
-      .lean();
+  async getOneCourse(courseId: ObjectId) {
+    const course = await this.courseModel.findById(courseId);
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);
     }
-    //  date formatting:
-    const groupsWithFormattedDates = (course.groups.map(group => group.valueOf()) as GroupDocument[]).map(group => ({
-      ...group,
-      studyPeriod: {
-        startDate: formatStudyPeriod(group.studyPeriod.startDate),
-        endDate: formatStudyPeriod(group.studyPeriod.endDate),
-      },
-    }));
 
-    return { ...course, groups: groupsWithFormattedDates };
+    return course;
   }
 
   async updateCourse(updateCourseDto: UpdateCourseDto, courseId: ObjectId) {

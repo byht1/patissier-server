@@ -27,6 +27,7 @@ import { CreateGroupDto } from 'src/groups/dto';
 import { GroupsService } from 'src/groups/groups.service';
 import { Group } from 'src/db-schemas/group.schema';
 import { GetAllCoursesSchema, GetOneCourseSchema } from './schema-swagger';
+import { GetGroupsOfCourse } from './schema-swagger/getGroupsOfCourse.schema';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -63,8 +64,8 @@ export class CoursesController {
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidatePipe)
   @Get(':courseId')
-  getOneCourse(@Param('courseId') courseId: ObjectId, @Query() searchGroupsDto: SearchCourseGroupsDto) {
-    return this.coursesService.getOneCourse(courseId, searchGroupsDto);
+  getOneCourse(@Param('courseId') courseId: ObjectId) {
+    return this.coursesService.getOneCourse(courseId);
   }
   // update course
   @ApiOperation({ summary: 'Update course' })
@@ -94,10 +95,20 @@ export class CoursesController {
   @ApiResponse({ status: 400, description: 'Invalid data' })
   @ApiResponse({ status: 500, description: 'Server error' })
   @UsePipes(ValidationPipe)
-  @UsePipes(ValidateIsNotVoid)
   @Post(':courseId/groups')
   addGroup(@Param('courseId') courseId: ObjectId, @Body() groupDto: CreateGroupDto) {
     return this.groupService.createGroup(groupDto, courseId);
+  }
+
+  // отримати групи певного курсу
+  @ApiOperation({ summary: 'Get groups by CourseId' })
+  @ApiResponse({ status: 200, description: 'OK', type: [GetGroupsOfCourse] })
+  @ApiResponse({ status: 404, description: 'Not Found' })
+  @ApiResponse({ status: 500, description: 'Server error' })
+  @UsePipes(ValidationPipe)
+  @Get(':courseId/groups')
+  getCourseGroups(@Param('courseId') courseId: ObjectId, @Query() searchGroupsDto: SearchCourseGroupsDto) {
+    return this.groupService.getCourseGroups(courseId, searchGroupsDto);
   }
 
   // видалити групу з курсу

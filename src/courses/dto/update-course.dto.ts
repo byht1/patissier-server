@@ -18,7 +18,7 @@ import {
 } from 'src/db-schemas/course.schema';
 import { fieldsValid } from '../helpers';
 import { Type } from 'class-transformer';
-import { CourseDetailsDto, CourseProgramDto } from './detailsAndProgram.dto';
+import { CourseDetailsDto, CourseProgramDto } from './details-and-program.dto';
 
 export class UpdateCourseDto {
   @ApiProperty({
