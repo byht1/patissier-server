@@ -45,7 +45,7 @@ export class GroupsService {
       throw new HttpException('Groups not found', HttpStatus.NOT_FOUND);
     }
 
-    const groupsWithFormattedDates = (groups.map(group => group.valueOf()) as GroupDocument[]).map(group => ({
+    const groupsWithFormattedDates = groups.map(group => ({
       ...group,
       studyPeriod: {
         startDate: formatStudyPeriod(group.studyPeriod.startDate),
@@ -53,7 +53,7 @@ export class GroupsService {
       },
     }));
 
-    return groupsWithFormattedDates;
+    return groupsWithFormattedDates as GroupDocument[];
   }
 
   // змінити будь-яке поле (час на усі дні однаковий)
