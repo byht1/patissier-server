@@ -64,8 +64,8 @@ export class GetOneCourseSchema {
         type: 'online',
         course: '64371e7f6bf0ecb4ba9f4247',
         studyPeriod: {
-          startDate: '09 вересня, субота',
-          endDate: '13 вересня, середа',
+          startDate: '2023-09-09',
+          endDate: '2023-09-18',
         },
         time: {
           from: '10:00',
