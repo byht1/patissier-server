@@ -6,7 +6,7 @@ import { Course, CourseDocument } from 'src/db-schemas/course.schema';
 import { EStireName, FirebaseStorageManager } from 'src/firebase';
 import { GroupsService } from 'src/groups/groups.service';
 
-import { CreateCourseDto,  SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
+import { CreateCourseDto, SearchCoursesDto, UpdateCourseDto, UploadPictureDto } from './dto';
 import { filterCourses } from './helpers';
 
 @Injectable()
@@ -59,7 +59,15 @@ export class CoursesService {
   }
 
   async getOneCourse(courseId: ObjectId) {
-    const course = await this.courseModel.findById(courseId);
+    const currentDate = new Date().toISOString().slice(0, 10);
+
+    const course = await this.courseModel.findById(courseId).populate({
+      path: 'groups',
+      match: {
+        'studyPeriod.startDate': { $gte: currentDate },
+      },
+      options: { sort: { 'studyPeriod.startDate': 1 }, limit: 1 },
+    });
 
     if (!course) {
       throw new HttpException('Course not found', HttpStatus.NOT_FOUND);

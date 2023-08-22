@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
 import { ECourseType, ICourseDetails, ICourseProgram } from 'src/db-schemas/course.schema';
+import { Group } from 'src/db-schemas/group.schema';
 
 export class GetOneCourseSchema {
   @ApiProperty({ example: '6373c0bca5a6e4c9556f1e7a' })
@@ -56,6 +57,25 @@ export class GetOneCourseSchema {
   })
   program: ICourseProgram;
 
-  @ApiProperty({ example: ['6373c0bca5a6e4c9556f1e7a', '645a1203e0d6ab750bae3414' ]})
-  groups: mongoose.Schema.Types.ObjectId[];
+  @ApiProperty({
+    example: [
+      {
+        _id: '64372d14dc718e6f6fc04350',
+        type: 'online',
+        course: '64371e7f6bf0ecb4ba9f4247',
+        studyPeriod: {
+          startDate: '2023-09-09',
+          endDate: '2023-09-18',
+        },
+        time: {
+          from: '10:00',
+          to: '14:00',
+        },
+        price: 2000,
+        clientIds: ['6373c0bca5a6e4c9556f1e7a'],
+        video: 'video url',
+      },
+    ],
+  })
+  groups: Group[];
 }
